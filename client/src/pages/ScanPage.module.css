@@ -1,0 +1,626 @@
+/* ══════════════════════════════════════════════════════
+   ScanPage.module.css — Styling for Scan QR Viewport
+   ══════════════════════════════════════════════════════ */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #05100a;
+  color: #dff0e7;
+  overflow-x: hidden;
+}
+
+.mainLayout {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 100px 24px 40px;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 36px;
+  text-align: left;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #a3b1c6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #7fa892;
+  margin-top: 8px;
+  max-width: 600px;
+}
+
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .splitGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Card Styling ────────────────────────────────────── */
+.card {
+  background: rgba(15, 31, 22, 0.65);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(74, 222, 128, 0.1);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.cardTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(74, 222, 128, 0.1);
+}
+
+/* ── Method Tabs ─────────────────────────────────────── */
+.methodTabs {
+  display: flex;
+  background: rgba(5, 16, 10, 0.8);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 222, 128, 0.1);
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  color: #7fa892;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabBtn:hover {
+  color: #ffffff;
+}
+
+.tabBtn.activeTab {
+  background: #4ade80;
+  color: #05100a;
+}
+
+/* ── Scanner Viewport ─────────────────────────────────── */
+.scannerWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.viewport {
+  position: relative;
+  aspect-ratio: 4/3;
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  background: #020704;
+  border-radius: 12px;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reader {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* html5-qrcode overrides inside scanner view */
+.reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.scannerOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.laserLine {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #4ade80, transparent);
+  box-shadow: 0 0 10px #4ade80, 0 0 20px #4ade80;
+  animation: scanLaser 3.5s linear infinite;
+}
+
+@keyframes scanLaser {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.scannerCorners {
+  position: absolute;
+  inset: 40px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #4ade80;
+  opacity: 0.85;
+}
+
+.topLeft {
+  top: 0; left: 0;
+  border-right: none; border-bottom: none;
+}
+.topRight {
+  top: 0; right: 0;
+  border-left: none; border-bottom: none;
+}
+.bottomLeft {
+  bottom: 0; left: 0;
+  border-right: none; border-top: none;
+}
+.bottomRight {
+  bottom: 0; right: 0;
+  border-left: none; border-top: none;
+}
+
+.scannerPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #7fa892;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.placeholderIcon {
+  width: 48px;
+  height: 48px;
+  opacity: 0.4;
+}
+
+.controlsRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* ── Select Inputs ───────────────────────────────────── */
+.selectWrapper {
+  flex: 1;
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  background: rgba(5, 16, 10, 0.8);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  color: #dff0e7;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: none;
+}
+
+.select:focus {
+  border-color: #4ade80;
+}
+
+.selectWrapper::after {
+  content: '▼';
+  font-size: 9px;
+  color: #7fa892;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ── File Upload Wrapper ─────────────────────────────── */
+.fileWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.dropZone {
+  width: 100%;
+  max-width: 580px;
+  aspect-ratio: 16/9;
+  border: 2px dashed rgba(74, 222, 128, 0.25);
+  border-radius: 12px;
+  background: rgba(5, 16, 10, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 10px;
+  text-align: center;
+  padding: 20px;
+}
+
+.dropZone:hover {
+  background: rgba(74, 222, 128, 0.05);
+  border-color: #4ade80;
+}
+
+.uploadIcon {
+  width: 44px;
+  height: 44px;
+  color: #4ade80;
+  opacity: 0.8;
+}
+
+.dropZone h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.dropZone p {
+  font-size: 12px;
+  color: #7fa892;
+}
+
+/* ── Manual Search Mode ──────────────────────────────── */
+.manualWrapper {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.helpText {
+  font-size: 13px;
+  color: #7fa892;
+  line-height: 1.5;
+}
+
+/* ── Action Panel (Right Side Card) ──────────────────── */
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.actionCard {
+  border-color: rgba(74, 222, 128, 0.22);
+  box-shadow: 0 10px 40px rgba(74, 222, 128, 0.05);
+}
+
+.deskBadge {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.deskSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(5, 16, 10, 0.5);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(74, 222, 128, 0.05);
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.metaRow .label {
+  color: #7fa892;
+}
+
+.metaRow .value {
+  color: #ffffff;
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.btnLink {
+  background: transparent;
+  border: none;
+  color: #7fa892;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btnLink:hover {
+  color: #ffffff;
+}
+
+/* ── Placeholder Panel ───────────────────────────────── */
+.placeholderCard {
+  background: rgba(15, 31, 22, 0.35);
+  border-style: dashed;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.placeholderContent h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.placeholderContent p {
+  font-size: 12px;
+  color: #7fa892;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.radarPulse {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(74, 222, 128, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.pulseInner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4ade80;
+  position: relative;
+}
+
+.pulseInner::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid #4ade80;
+  opacity: 0.5;
+  animation: scanPulse 1.8s infinite ease-out;
+}
+
+@keyframes scanPulse {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* ── Mock QR Panel ───────────────────────────────────── */
+.mockCard {
+  border-color: rgba(74, 222, 128, 0.08);
+}
+
+.mockQrSelectorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.selectMini {
+  background: rgba(5, 16, 10, 0.8);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Space Mono', monospace;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+}
+
+.qrCodeWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.qrCodeImageContainer {
+  position: relative;
+  cursor: pointer;
+  background: #090f0b;
+  border: 2px solid rgba(74, 222, 128, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.qrCodeImageContainer:hover {
+  transform: scale(1.03);
+  border-color: #4ade80;
+  box-shadow: 0 4px 24px rgba(74, 222, 128, 0.25);
+}
+
+.qrCodeImage {
+  width: 140px;
+  height: 140px;
+  display: block;
+  border-radius: 6px;
+}
+
+.qrOverlayHover {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 15, 11, 0.85);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.qrCodeImageContainer:hover .qrOverlayHover {
+  opacity: 1;
+}
+
+.qrOverlayHover span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4ade80;
+  border: 1px solid #4ade80;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.qrPlaceholder {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7fa892;
+  font-size: 12px;
+  background: #090f0b;
+  border-radius: 6px;
+}
+
+.mockActionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.downloadLink {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s;
+}
+
+.downloadLink:hover {
+  opacity: 0.85;
+}
+
+/* ── Toast Feedback ──────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 500;
+  background: rgba(8, 18, 12, 0.98);
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+  animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

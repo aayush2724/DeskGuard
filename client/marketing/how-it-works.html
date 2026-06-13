@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="description" content="How DeskGuard senses, processes, and displays real-time desk occupancy without cameras or badges." />
+  <title>How it works — DeskGuard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <canvas id="webgl-canvas"></canvas>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+            <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/>
+            <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+            <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/>
+          </svg>
+        </span>
+        DeskGuard
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html" class="active">How it works</a>
+        <a href="features.html">Features</a>
+        <a href="/live">Live Map</a>
+        <a href="/librarian">Librarian</a>
+        <a href="blog.html">Blog</a>
+        <a href="docs.html">Docs</a>
+        <a href="contact.html" class="nav-cta">Get early access</a>
+      </div>
+      <button class="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <span class="eyebrow" data-reveal>How it works</span>
+    <h1 data-reveal>Sense. Process. Display.<br/>That's the whole stack.</h1>
+    <p data-reveal>DeskGuard reads the radio signals already bouncing around your building and turns them into a live, privacy-safe map of every seat. No cameras, no badges, no app for occupants.</p>
+  </section>
+
+  <section class="content-section">
+    <div class="steps" style="margin-bottom: 100px;">
+      <div class="step" data-reveal data-reveal-delay="0">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="#4ADE80" stroke-width="1.5"/><path d="M14 9v5l3 3" stroke="#4ADE80" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Sense</h3>
+        <p>Passive BLE and WiFi probes detect device presence at each desk zone. No app required for occupants.</p>
+      </div>
+      <div class="step-connector" data-reveal data-reveal-delay="100">
+        <div class="connector-line"></div>
+      </div>
+      <div class="step" data-reveal data-reveal-delay="200">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="20" height="14" rx="2" stroke="#4ADE80" stroke-width="1.5"/><path d="M9 8V6a5 5 0 0 1 10 0v2" stroke="#4ADE80" stroke-width="1.5"/></svg>
+        </div>
+        <h3>Process</h3>
+        <p>Our edge model fuses signals, applies a ghost-seat classifier, and emits a per-desk status update every 30 seconds.</p>
+      </div>
+      <div class="step-connector" data-reveal data-reveal-delay="300">
+        <div class="connector-line"></div>
+      </div>
+      <div class="step" data-reveal data-reveal-delay="400">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14h18M14 5l9 9-9 9" stroke="#4ADE80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Display</h3>
+        <p>A 3D floor plan updates live on any display, web browser, or kiosk. Staff see a management dashboard with time-series data.</p>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <span class="eyebrow" data-reveal>The details</span>
+      <h2 data-reveal>What's actually happening<br/>under the hood</h2>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-card" data-reveal data-reveal-delay="0">
+        <h4>Sensor placement</h4>
+        <p>One low-power sensor unit covers roughly 8–12 desks depending on room geometry. Units mount discreetly under desks or on ceiling rails — no cabling to each desk required, just power and a mesh network link.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="80">
+        <h4>Signal fusion</h4>
+        <p>BLE RSSI, WiFi probe requests, and ultrasonic distance readings are fused on-device using a lightweight model trained across 40+ deployments, so it adapts to your room's furniture and wall materials within the first week.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="160">
+        <h4>Ghost-seat classifier</h4>
+        <p>A desk showing a device but no human presence signal for longer than your configured window (15 minutes by default) is flagged amber. This is the feature institutions ask for most — bags and laptops shouldn't reserve seats indefinitely.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="240">
+        <h4>Edge processing</h4>
+        <p>All raw signal data is processed locally. Only the final per-desk status (free / occupied / ghost) is sent to the dashboard — hashed, anonymised, and with no device identifiers retained past the processing window.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="0">
+        <h4>30-second cadence</h4>
+        <p>Status updates publish every 30 seconds over a lightweight WebSocket feed, fast enough to feel live on a kiosk display without flooding your network or draining sensor batteries.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="80">
+        <h4>Self-calibration</h4>
+        <p>When you rearrange furniture or add desks, the system re-calibrates automatically over 24–48 hours rather than requiring a manual remap — just walk the new layout once with the calibration app.</p>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <span class="eyebrow" data-reveal>Installation</span>
+      <h2 data-reveal>Live in a week,<br/>not a quarter</h2>
+      <p data-reveal>Most institutions go from signed contract to a working floor map in 5–7 business days.</p>
+    </div>
+    <div class="detail-grid" style="margin-bottom: 0;">
+      <div class="detail-card" data-reveal data-reveal-delay="0">
+        <h4>Day 1–2: Survey &amp; plan</h4>
+        <p>Our team walks your space, marks sensor placement on your floor plan, and confirms power/network access points. Most rooms need zero new cabling.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="100">
+        <h4>Day 3–4: Install &amp; calibrate</h4>
+        <p>Sensors are mounted and joined to the mesh network. A technician walks the room to calibrate the ghost-seat classifier against your actual furniture.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="200">
+        <h4>Day 5: Dashboard setup</h4>
+        <p>We configure your floor map, alert channels (Slack, Teams, email), and ghost-seat policy window with your facilities team.</p>
+      </div>
+      <div class="detail-card" data-reveal data-reveal-delay="300">
+        <h4>Day 6–7: Go live</h4>
+        <p>The live map goes up on your kiosk, embedded site, or app. We monitor accuracy for the first week and tune thresholds as needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mini-cta">
+    <span class="eyebrow" data-reveal>Ready when you are</span>
+    <h2 data-reveal>See it running on<br/>your floor plan</h2>
+    <div class="mini-cta-actions" data-reveal>
+      <a href="contact.html" class="btn-primary"><span>Get early access</span></a>
+      <a href="features.html" class="btn-ghost">Explore features</a>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo">
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/></svg>
+          DeskGuard
+        </span>
+        <p>A living map of the reading room.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <span class="footer-col-title">Product</span>
+          <a href="how-it-works.html">How it works</a>
+          <a href="features.html">Features</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Company</span>
+          <a href="blog.html">Blog</a>
+          <a href="careers.html">Careers</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Legal</span>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html#gdpr">GDPR</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 DeskGuard Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="shader.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="description" content="DeskGuard developer documentation: REST API, WebSocket feed, embeddable floor maps, kiosk mode, and integrations." />
+  <title>Docs — DeskGuard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <canvas id="webgl-canvas"></canvas>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+            <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/>
+            <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+            <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/>
+          </svg>
+        </span>
+        DeskGuard
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html">How it works</a>
+        <a href="features.html">Features</a>
+        <a href="/live">Live Map</a>
+        <a href="/librarian">Librarian</a>
+        <a href="blog.html">Blog</a>
+        <a href="docs.html" class="active">Docs</a>
+        <a href="contact.html" class="nav-cta">Get early access</a>
+      </div>
+      <button class="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <span class="docs-sidebar-title">Get started</span>
+      <a href="#overview" class="active">Overview</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="#auth">Authentication</a>
+
+      <span class="docs-sidebar-title">API reference</span>
+      <a href="#rest">REST endpoints</a>
+      <a href="#websocket">WebSocket feed</a>
+      <a href="#statuses">Desk status values</a>
+
+      <span class="docs-sidebar-title">Embedding</span>
+      <a href="#embed">Embed the floor map</a>
+      <a href="#kiosk">Kiosk mode</a>
+
+      <span class="docs-sidebar-title">Integrations</span>
+      <a href="#integrations">Booking systems</a>
+      <a href="#webhooks">Webhooks &amp; alerts</a>
+    </aside>
+
+    <main class="docs-content">
+      <h1 id="overview">DeskGuard Developer Docs</h1>
+      <p>Everything you need to read live occupancy data, embed the floor map, and connect DeskGuard to your own systems.</p>
+
+      <h2 id="quickstart">Quickstart</h2>
+      <p>Every DeskGuard account includes an API key, available from <strong>Dashboard → Settings → API</strong>. All requests use this key as a bearer token.</p>
+      <pre><code>curl https://api.deskguard.io/v1/floors/floor-2b/desks \
+  -H "Authorization: Bearer dg_live_xxxxxxxxxxxx"</code></pre>
+      <p>A successful response returns the current status of every desk on that floor:</p>
+      <pre><code>{
+  "floor": "floor-2b",
+  "updated_at": "2026-06-13T10:32:00Z",
+  "desks": [
+    { "id": "2b-014", "status": "free" },
+    { "id": "2b-015", "status": "occupied" },
+    { "id": "2b-016", "status": "ghost", "ghost_since": "2026-06-13T10:09:00Z" }
+  ]
+}</code></pre>
+
+      <h2 id="auth">Authentication</h2>
+      <p>API keys are scoped per-account and can be restricted to read-only access. Rotate keys at any time from the dashboard — old keys remain valid for 24 hours after rotation to avoid downtime.</p>
+      <p>For embedded floor maps (see <a href="#embed">Embedding</a>), use a separate <strong>public embed token</strong>, which only exposes aggregate desk status and cannot be used to access account settings or analytics exports.</p>
+
+      <h2 id="rest">REST endpoints</h2>
+      <table>
+        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+        <tr><td>GET</td><td><code>/v1/floors</code></td><td>List all floors on your account</td></tr>
+        <tr><td>GET</td><td><code>/v1/floors/:id/desks</code></td><td>Current status of every desk on a floor</td></tr>
+        <tr><td>GET</td><td><code>/v1/floors/:id/desks/:desk_id/history</code></td><td>Status history for a single desk</td></tr>
+        <tr><td>GET</td><td><code>/v1/analytics/utilisation</code></td><td>Aggregate utilisation stats, filterable by date range and floor</td></tr>
+        <tr><td>POST</td><td><code>/v1/alerts/test</code></td><td>Send a test alert to your configured channel</td></tr>
+      </table>
+
+      <h2 id="websocket">WebSocket feed</h2>
+      <p>For live displays, subscribe to the WebSocket feed instead of polling. Desk status pushes occur roughly every 30 seconds, or immediately when a desk's status changes.</p>
+      <pre><code>const ws = new WebSocket("wss://api.deskguard.io/v1/stream?token=dg_live_xxxxxxxxxxxx");
+
+ws.onmessage = (event) => {
+  const update = JSON.parse(event.data);
+  // { floor: "floor-2b", desk: "2b-016", status: "ghost", ghost_since: "..." }
+  console.log(update);
+};</code></pre>
+
+      <h2 id="statuses">Desk status values</h2>
+      <table>
+        <tr><th>Status</th><th>Meaning</th></tr>
+        <tr><td><code>free</code></td><td>No device or human presence detected</td></tr>
+        <tr><td><code>occupied</code></td><td>Human presence detected at the desk</td></tr>
+        <tr><td><code>ghost</code></td><td>Device present, no human presence for longer than the configured ghost-seat window</td></tr>
+        <tr><td><code>offline</code></td><td>Sensor for this desk is not reporting — check sensor health in the dashboard</td></tr>
+      </table>
+
+      <h2 id="embed">Embed the floor map</h2>
+      <p>Add a live, interactive floor map to your own site or intranet with a single script tag. Replace <code>YOUR_EMBED_TOKEN</code> and <code>FLOOR_ID</code> with values from <strong>Dashboard → Settings → Embeds</strong>.</p>
+      <pre><code>&lt;div id="deskguard-map"&gt;&lt;/div&gt;
+&lt;script src="https://embed.deskguard.io/v1/map.js"
+        data-token="YOUR_EMBED_TOKEN"
+        data-floor="FLOOR_ID"
+        data-target="#deskguard-map"&gt;&lt;/script&gt;</code></pre>
+      <p>The embed is responsive and matches your page's colour scheme automatically by reading <code>prefers-color-scheme</code>, or you can force a theme with <code>data-theme="dark"</code> or <code>data-theme="light"</code>.</p>
+
+      <h2 id="kiosk">Kiosk mode</h2>
+      <p>For wall-mounted displays, visit <code>https://app.deskguard.io/kiosk/FLOOR_ID?token=YOUR_EMBED_TOKEN</code> in any browser and set it to fullscreen. Kiosk mode automatically refreshes, dims during off-hours based on your configured schedule, and recovers from network drops without manual intervention.</p>
+
+      <h2 id="integrations">Booking systems</h2>
+      <p>DeskGuard can overlay reservation data from supported booking systems so the floor map distinguishes "reserved, not yet occupied" from "walk-in available." Supported integrations:</p>
+      <ul>
+        <li><strong>LibCal</strong> — connect via OAuth in Dashboard → Integrations</li>
+        <li><strong>Outlook / Microsoft 365</strong> — requires admin consent for room-resource calendars</li>
+        <li><strong>Google Calendar</strong> — connect a service account with access to resource calendars</li>
+      </ul>
+      <p>Once connected, reserved desks show a small calendar icon on the floor map and in the embed, even before the reservation start time.</p>
+
+      <h2 id="webhooks">Webhooks &amp; alerts</h2>
+      <p>Configure webhooks from <strong>Dashboard → Settings → Webhooks</strong> to receive POST requests on key events:</p>
+      <table>
+        <tr><th>Event</th><th>Trigger</th></tr>
+        <tr><td><code>desk.ghost</code></td><td>A desk crosses the ghost-seat timeout threshold</td></tr>
+        <tr><td><code>desk.offline</code></td><td>A sensor stops reporting for more than 5 minutes</td></tr>
+        <tr><td><code>floor.utilisation_threshold</code></td><td>Floor occupancy crosses a configured percentage</td></tr>
+      </table>
+      <p>Slack and Microsoft Teams have built-in integrations that don't require custom webhook handling — connect them directly from the same settings page.</p>
+    </main>
+  </div>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo">
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/></svg>
+          DeskGuard
+        </span>
+        <p>A living map of the reading room.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <span class="footer-col-title">Product</span>
+          <a href="how-it-works.html">How it works</a>
+          <a href="features.html">Features</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Company</span>
+          <a href="blog.html">Blog</a>
+          <a href="careers.html">Careers</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Legal</span>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html#gdpr">GDPR</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 DeskGuard Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="shader.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+/* DeskGuard React App — Global Styles matching existing dark-green brand */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #05100a;
+  --bg-2:      #080f0b;
+  --surface:   #0f1f16;
+  --surface-2: #162b1d;
+  --border:    rgba(74,222,128,.10);
+  --border-2:  rgba(74,222,128,.22);
+  --green:     #4ADE80;
+  --green-dim: rgba(74,222,128,.12);
+  --amber:     #FBBF24;
+  --red:       #F87171;
+  --gray:      #6B7280;
+  --text:      #dff0e7;
+  --text-2:    #7fa892;
+  --text-3:    #3d5a47;
+  --mono:      'Space Mono', monospace;
+  --sans:      'Space Grotesk', system-ui, sans-serif;
+  --radius:    14px;
+  --radius-sm: 8px;
+}
+
+html, body, #root { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--sans); }
+
+/* ── Shared Nav ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(5,16,10,.92); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 28px;
+  height: 60px; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 9px;
+  font-weight: 700; font-size: 15px; color: var(--text);
+}
+.nav-links { display: flex; align-items: center; gap: 24px; }
+.nav-links a { font-size: 13px; color: var(--text-2); font-weight: 500; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--green); }
+.nav-cta {
+  background: var(--green); color: #05100a !important;
+  padding: 7px 16px; border-radius: 6px; font-weight: 700;
+  font-size: 12px; text-transform: uppercase; letter-spacing: .03em;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background: var(--green); color: #05100a;
+  font-weight: 700; font-size: 13px; letter-spacing: .02em;
+  text-transform: uppercase; padding: 11px 26px;
+  border-radius: var(--radius-sm); border: none; cursor: pointer;
+  transition: opacity .18s, transform .18s, box-shadow .18s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(74,222,128,.25); }
+
+.btn-outline {
+  background: transparent; border: 1px solid var(--border-2); color: var(--text);
+  font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .02em;
+  padding: 11px 24px; border-radius: var(--radius-sm); cursor: pointer;
+  transition: background .18s, border-color .18s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-outline:hover { background: var(--green-dim); border-color: var(--green); }
+
+.btn-ghost {
+  background: transparent; border: none; color: var(--text-2);
+  font-size: 13px; padding: 8px 12px; cursor: pointer;
+  transition: color .2s; border-radius: 6px;
+}
+.btn-ghost:hover { color: var(--text); }
+
+.btn-amber {
+  background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.3);
+  color: var(--amber); font-weight: 700; font-size: 13px; text-transform: uppercase;
+  padding: 11px 20px; border-radius: var(--radius-sm); cursor: pointer;
+  transition: all .2s;
+}
+.btn-amber:hover { background: rgba(251,191,36,.2); }
+
+.btn-red {
+  background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.28);
+  color: var(--red); font-weight: 700; font-size: 13px; text-transform: uppercase;
+  padding: 11px 20px; border-radius: var(--radius-sm); cursor: pointer;
+  transition: all .2s;
+}
+.btn-red:hover { background: rgba(248,113,113,.2); }
+
+/* ── Pulse dot ── */
+.pulse-dot {
+  display: inline-block; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--green); position: relative; flex-shrink: 0;
+}
+.pulse-dot::after {
+  content: ''; position: absolute; inset: -3px; border-radius: 50%;
+  border: 1px solid var(--green); opacity: .5; animation: pulse 2.2s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: .5; }
+  70% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* ── Eyebrow ── */
+.eyebrow {
+  font-family: var(--mono); font-size: 10px; color: var(--green);
+  text-transform: uppercase; letter-spacing: .18em;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(74,222,128,.2); border-radius: 3px; }
+
+/* ── Animations ── */
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.92) translateY(16px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px); }
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="description" content="An analysis of ghost-seat data across 40 DeskGuard deployments and what it means for study space utilisation." />
+  <title>The ghost-seat problem nobody talks about — DeskGuard Blog</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <canvas id="webgl-canvas"></canvas>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+            <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/>
+            <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+            <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/>
+          </svg>
+        </span>
+        DeskGuard
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html">How it works</a>
+        <a href="features.html">Features</a>
+        <a href="/live">Live Map</a>
+        <a href="/librarian">Librarian</a>
+        <a href="blog.html" class="active">Blog</a>
+        <a href="docs.html">Docs</a>
+        <a href="contact.html" class="nav-cta">Get early access</a>
+      </div>
+      <button class="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="page-header" style="padding-bottom: 0;">
+    <span class="eyebrow" data-reveal>Product</span>
+    <h1 data-reveal>The ghost-seat problem nobody talks about</h1>
+    <p data-reveal>Aanya Kapoor · May 2026 · 6 min read</p>
+  </section>
+
+  <article class="content-narrow" data-reveal>
+
+    <p>When we first pitched DeskGuard to libraries, the most common objection wasn't about privacy or cost — it was disbelief. "Our occupancy sensors already show 90% full most afternoons," one facilities director told us. "We don't need another dashboard telling us the same thing."</p>
+    <p>He was right that the floor looked full. He was wrong about what "full" meant.</p>
+    <h2>What the data actually shows</h2>
+    <p>Across 40 institutions and roughly 12,000 monitored desks, we found that during peak hours an average of <strong>18% of desks flagged as "occupied" by simple presence sensors</strong> had no person actually sitting at them for more than 15 minutes. A bag on a chair, a laptop left charging, a jacket over the back of a seat — all register as "occupied" to a basic motion or weight sensor, but represent a desk that's functionally unavailable to someone who actually needs it.</p>
+    <p>In percentage terms that doesn't sound dramatic. In absolute terms, for a 200-desk reading room during exam season, that's 36 desks sitting empty while students wait outside the door.</p>
+    <h2>Why this is hard to fix with cameras</h2>
+    <p>The obvious fix is video — point a camera at the room and use a person-detection model. Most institutions we've spoken to have already ruled this out, for reasons that have nothing to do with technical feasibility: students object to being filmed in study spaces, GDPR consent requirements become onerous, and footage retention policies create legal exposure that facilities teams don't want to own.</p>
+    <p>This is the gap DeskGuard's ghost-seat classifier is built to close — using signal fusion rather than imagery to distinguish "device present, no human" from "device present, human present."</p>
+    <h2>What changed after rollout</h2>
+    <p>At the three institutions where we have a full year of before/after data, the pattern is consistent: average time-to-find-a-seat during peak hours dropped from several minutes of walking and checking to under 15 seconds via the live map, and the proportion of ghost seats at any given time fell by roughly half within the first month — not because the sensors caused the change directly, but because staff started actively managing the desks the dashboard flagged.</p>
+    <p>The technology surfaces the problem. The policy — a posted 15-minute ghost-seat window, enforced gently by staff — is what actually solves it.</p>
+  
+  </article>
+
+  <section class="mini-cta">
+    <span class="eyebrow" data-reveal>More from the blog</span>
+    <h2 data-reveal>Keep reading</h2>
+    <div class="mini-cta-actions" data-reveal>
+      <a href="blog.html" class="btn-outline">Back to blog</a>
+      <a href="contact.html" class="btn-primary"><span>Get early access</span></a>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo">
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/></svg>
+          DeskGuard
+        </span>
+        <p>A living map of the reading room.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <span class="footer-col-title">Product</span>
+          <a href="how-it-works.html">How it works</a>
+          <a href="features.html">Features</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Company</span>
+          <a href="blog.html">Blog</a>
+          <a href="careers.html">Careers</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Legal</span>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html#gdpr">GDPR</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 DeskGuard Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="shader.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

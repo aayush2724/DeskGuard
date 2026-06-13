@@ -1,0 +1,249 @@
+/* ══════════════════════════════════════════════════════
+   CSSIsometricMap — Pure CSS 3D isometric floor plan
+   ══════════════════════════════════════════════════════ */
+
+/* ── Container ──────────────────────────────────────── */
+.container {
+  width: 100%; height: 100%;
+  perspective: 1800px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #070c08 0%, #0b140f 50%, #0f1c14 100%);
+  display: flex; align-items: center; justify-content: center;
+  cursor: grab; user-select: none; position: relative;
+  touch-action: none;
+}
+.container:active { cursor: grabbing; }
+
+/* ── 3D Canvas ──────────────────────────────────────── */
+.canvas3d {
+  width: 1300px; height: 1150px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* ── Floor ───────────────────────────────────────────── */
+.floor {
+  position: absolute; inset: -80px;
+  background:
+    linear-gradient(90deg, rgba(74, 222, 128, 0.04) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(74, 222, 128, 0.04) 1px, transparent 1px),
+    linear-gradient(145deg, #090f0b 0%, #050806 100%);
+  background-size: 52px 52px, 52px 52px, 100% 100%;
+  border-radius: 12px;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.7),
+    inset 0 0 120px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(74, 222, 128, 0.1);
+  transform: translateZ(-1px);
+}
+
+/* ── Zone containers ─────────────────────────────────── */
+.zone {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+.zoneBg {
+  position: absolute; top: -5px; left: -5px;
+  background: rgba(11, 20, 15, 0.5);
+  border: 1px solid rgba(74, 222, 128, 0.08);
+  border-radius: 10px;
+  transform: translateZ(0.5px);
+}
+.zoneLabel {
+  position: absolute;
+  top: -30px; left: 2px;
+  font: 700 11px/1 'Space Grotesk', 'Inter', sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #4ade80;
+  opacity: 0.7;
+  transform: translateZ(1px);
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════
+   3D Desk Construction
+   ══════════════════════════════════════════════════════ */
+.desk {
+  position: absolute;
+  width: 90px; height: 90px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+.desk:hover {
+  transform: translateZ(8px) scale(1.04);
+  z-index: 10;
+}
+.desk.selected {
+  transform: translateZ(12px) scale(1.06);
+  z-index: 20;
+}
+
+/* ── Table Top (elevated surface) ────────────────────── */
+.tableTop {
+  position: absolute;
+  width: 72px; height: 42px;
+  left: 9px; top: 12px;
+  background: var(--dc);
+  border-radius: 3px;
+  transform: translateZ(26px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ── Table Front Face (hangs from top edge to floor) ── */
+.tableFront {
+  position: absolute;
+  width: 72px; height: 26px;
+  left: 9px; top: 54px;
+  background: var(--dd);
+  transform-origin: top center;
+  transform: translateZ(26px) rotateX(90deg);
+  border-radius: 0 0 2px 2px;
+}
+
+/* ── Table Right Side Face (hangs from side edge to floor) ── */
+.tableSide {
+  position: absolute;
+  width: 26px; height: 42px;
+  left: 81px; top: 12px;
+  background: var(--ddk);
+  transform-origin: left center;
+  transform: translateZ(26px) rotateY(90deg);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Monitor Screen (standing upright and slightly tilted) ── */
+.monitorScreen {
+  position: absolute;
+  width: 32px; height: 18px;
+  left: 29px; top: 18px;
+  background: #090f0b;
+  border-radius: 2px;
+  border: 1.5px solid #2d3748;
+  transform-origin: bottom center;
+  transform: translateZ(28px) rotateX(-80deg);
+  box-shadow: 0 -2px 8px rgba(74,222,128,0.15);
+}
+
+/* ── Monitor Stand ───────────────────────────────────── */
+.monitorStand {
+  position: absolute;
+  width: 4px; height: 4px;
+  left: 43px; top: 18px;
+  background: #4a5568;
+  transform: translateZ(26px);
+}
+
+/* ── Chair Seat ──────────────────────────────────────── */
+.chairSeat {
+  position: absolute;
+  width: 26px; height: 26px;
+  left: 32px; top: 58px;
+  background: #1e293b;
+  border-radius: 3px;
+  transform: translateZ(14px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+/* ── Chair Back (stands vertically upright above seat) ── */
+.chairBack {
+  position: absolute;
+  width: 26px; height: 20px;
+  left: 32px; top: 84px;
+  background: #0f172a;
+  border-radius: 4px 4px 0 0;
+  transform-origin: top center;
+  transform: translateZ(14px) rotateX(-85deg);
+}
+
+/* ── Desk Label ──────────────────────────────────────── */
+.deskLabel {
+  position: absolute;
+  width: 100%; text-align: center;
+  bottom: -4px; left: 0;
+  font: 600 8px/1 'Space Mono', monospace;
+  color: #a3b1c6;
+  transform: translateZ(32px);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.desk:hover .deskLabel,
+.desk.selected .deskLabel {
+  opacity: 1;
+}
+
+/* ── Status Dot ──────────────────────────────────────── */
+.statusDot {
+  position: absolute;
+  width: 8px; height: 8px;
+  left: 41px; top: 2px;
+  border-radius: 50%;
+  transform: translateZ(52px);
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* ── Selection Ring ──────────────────────────────────── */
+.selectRing {
+  position: absolute;
+  width: 86px; height: 86px;
+  left: 2px; top: 2px;
+  border: 2px solid var(--dc);
+  border-radius: 8px;
+  transform: translateZ(1px);
+  box-shadow: 0 0 16px var(--dc), inset 0 0 12px rgba(0,0,0,0.2);
+  animation: pulse-ring 1.5s ease-in-out infinite;
+}
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════════
+   UI Overlays
+   ══════════════════════════════════════════════════════ */
+.resetBtn {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(15, 31, 22, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  color: #4ade80;
+  font: 600 12px/1 'Space Grotesk', sans-serif;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 50;
+}
+.resetBtn:hover {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: #4ade80;
+  box-shadow: 0 4px 24px rgba(74,222,128,0.25);
+}
+
+.legend {
+  position: absolute;
+  bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 20px;
+  background: rgba(15, 31, 22, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 50;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+.legendItem {
+  display: flex; align-items: center; gap: 6px;
+  font: 500 11px/1 'Space Grotesk', sans-serif;
+  color: #94a3b8;
+}
+.legendDot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

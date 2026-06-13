@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: deskguard_postgres
+    environment:
+      POSTGRES_DB: deskguard
+      POSTGRES_USER: deskguard
+      POSTGRES_PASSWORD: deskguard
+    ports:
+      - "5444:5432"
+    volumes:
+      - deskguard_pg:/var/lib/postgresql/data
+      - ./server/src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:Z
+
+  redis:
+    image: redis:7-alpine
+    container_name: deskguard_redis
+    ports:
+      - "6399:6379"
+
+volumes:
+  deskguard_pg:
