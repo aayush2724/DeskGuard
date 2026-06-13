@@ -1,5 +1,3 @@
-import { useEffect, useRef } from 'react'
-import QRCode from 'qrcode'
 import styles from './DetailPanel.module.css'
 
 const STATUS_META = {
@@ -20,18 +18,6 @@ function timeSince(ts) {
 }
 
 export default function DetailPanel({ desk, onClose, onCheckin, onAway, onCheckout }) {
-  const qrRef = useRef(null)
-
-  useEffect(() => {
-    if (!desk || desk.status !== 'free') return
-    if (!qrRef.current) return
-    const checkinUrl = `${window.location.origin}/live?checkin=${desk.id}`
-    QRCode.toCanvas(qrRef.current, checkinUrl, {
-      width: 130, margin: 1,
-      color: { dark: '#111', light: '#fff' }
-    })
-  }, [desk?.id, desk?.status])
-
   if (!desk) return null
   const meta = STATUS_META[desk.status] || STATUS_META.free
 
@@ -66,11 +52,6 @@ export default function DetailPanel({ desk, onClose, onCheckin, onAway, onChecko
       {/* FREE — show QR + check in */}
       {desk.status === 'free' && (
         <div className={styles.qrSection}>
-          <p className={styles.qrLabel}>Scan QR to Check In</p>
-          <div className={styles.qrBox}>
-            <canvas ref={qrRef} />
-          </div>
-          <p className={styles.qrOr}>— or —</p>
           <button className="btn-primary" style={{width:'100%'}} onClick={() => onCheckin(desk.id)}>
             ✓ Check In Now
           </button>
