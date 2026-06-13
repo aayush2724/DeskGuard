@@ -498,7 +498,7 @@ body > *:not(#webgl-canvas) {
 /* ── How it works ─────────────────────────────────────── */
 .how {
   padding: 0;
-  background: transparent;
+  background: var(--bg);
   overflow: visible;
 }
 .how-header {
@@ -918,8 +918,7 @@ body > *:not(#webgl-canvas) {
 /* ── Footer ───────────────────────────────────────────── */
 .footer {
   border-top: 1px solid var(--border);
-  background: rgba(5,16,10,.7);
-  backdrop-filter: blur(12px);
+  background: var(--bg);
   padding: 64px 32px 0;
 }
 .footer-inner {
@@ -1436,6 +1435,7 @@ body > *:not(#webgl-canvas) {
 /* ── Bookshelf ────────────────────────────────────────── */
 .bookshelf-section {
   padding: 100px 32px 140px;
+  background: var(--bg);
 }
 .bookshelf-container {
   max-width: 900px;
@@ -1471,9 +1471,12 @@ body > *:not(#webgl-canvas) {
   height: 300px;
   border-radius: 4px 12px 12px 4px;
   cursor: pointer;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.4s ease;
   transform-style: preserve-3d;
-  box-shadow: -4px 0 10px rgba(0,0,0,0.4), inset 2px 0 5px rgba(255,255,255,0.2);
+  box-shadow: -8px 0 20px rgba(0,0,0,0.8), inset 2px 0 5px rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-left: 2px solid rgba(255,255,255,0.25); /* spine edge highlight */
+  backdrop-filter: blur(12px);
 }
 
 /* Base book spine styling */
@@ -1488,21 +1491,30 @@ body > *:not(#webgl-canvas) {
   position: relative;
   overflow: hidden;
 }
-/* Spine accents */
+/* Spine ridges to make it look like a physical book */
+.book-spine::before,
 .book-spine::after {
   content: '';
   position: absolute;
-  top: 15%; right: 10%;
-  width: 80%; height: 2px;
-  background: rgba(255,255,255,0.3);
-  box-shadow: 0 220px 0 rgba(255,255,255,0.3);
+  left: 0; right: 0;
+  height: 6px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.9);
 }
+.book-spine::before { top: 45px; }
+.book-spine::after { bottom: 45px; }
 
 .book-icon {
-  font-size: 24px;
-  margin-bottom: 20px;
-  transform: rotate(-90deg);
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
 }
 .book-title {
   writing-mode: vertical-rl;
@@ -1512,14 +1524,16 @@ body > *:not(#webgl-canvas) {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.15em;
-  color: #ffffff;
+  color: var(--text);
   white-space: nowrap;
+  opacity: 0.9;
 }
 
 /* Hover effect: pull out and float */
 .book:hover, .book:focus {
   transform: translateY(-30px) translateZ(30px) rotateY(-5deg);
-  box-shadow: -15px 20px 30px rgba(0,0,0,0.5), inset 2px 0 5px rgba(255,255,255,0.3);
+  box-shadow: -15px 20px 30px rgba(0,0,0,0.8), inset 1px 0 3px rgba(74,222,128,0.2);
+  border-color: var(--green);
   z-index: 20;
   outline: none;
 }
@@ -1572,13 +1586,13 @@ body > *:not(#webgl-canvas) {
   line-height: 1.5;
 }
 
-/* Book Colors */
-.book-purple { background: linear-gradient(to right, #6b21a8, #9333ea); }
-.book-blue { background: linear-gradient(to right, #1e3a8a, #2563eb); }
-.book-amber { background: linear-gradient(to right, #b45309, #d97706); }
-.book-red { background: linear-gradient(to right, #991b1b, #dc2626); }
-.book-orange { background: linear-gradient(to right, #c2410c, #ea580c); }
-.book-green { background: linear-gradient(to right, #166534, #22c55e); height: 320px; /* slightly taller */ }
+/* Book Colors - Glassmorphic Jewel Tones */
+.book-purple { background: linear-gradient(to right, rgba(50,20,70,0.8), rgba(110,40,160,0.5) 15%, rgba(25,10,35,0.9)); }
+.book-blue   { background: linear-gradient(to right, rgba(15,35,70,0.8), rgba(35,80,180,0.5) 15%, rgba(10,15,35,0.9)); }
+.book-amber  { background: linear-gradient(to right, rgba(70,45,10,0.8), rgba(180,110,25,0.5) 15%, rgba(35,20,5,0.9)); }
+.book-red    { background: linear-gradient(to right, rgba(70,20,20,0.8), rgba(180,45,45,0.5) 15%, rgba(35,10,10,0.9)); }
+.book-orange { background: linear-gradient(to right, rgba(70,35,10,0.8), rgba(200,80,25,0.5) 15%, rgba(35,15,5,0.9)); }
+.book-green  { background: linear-gradient(to right, rgba(20,60,35,0.8), rgba(45,150,75,0.5) 15%, rgba(10,30,15,0.9)); height: 320px; }
 
 /* Tilted book effect for variety */
 .book-orange {

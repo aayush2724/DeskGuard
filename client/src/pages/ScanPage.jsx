@@ -38,8 +38,8 @@ export default function ScanPage() {
       width: 300,
       margin: 2,
       color: {
-        dark: '#4ade80', // bright green foreground
-        light: '#090f0b' // dark green-black background
+        dark: '#000000', // standard black foreground
+        light: '#ffffff' // standard white background
       }
     })
     .then(url => setMockQrUrl(url))
@@ -230,7 +230,7 @@ export default function ScanPage() {
   return (
     <div className={styles.root}>
       {/* Hidden container required by file reader scan */}
-      <div id="reader-file-temp" style={{ display: 'none' }} />
+      <div id="reader-file-temp" style={{ position: 'absolute', top: '-9999px', opacity: 0, pointerEvents: 'none' }} />
 
       {/* Nav */}
       <nav className="nav">
@@ -245,10 +245,13 @@ export default function ScanPage() {
             DeskGuard
           </a>
           <div className="nav-links">
-            <a href="/live">Live Map</a>
-            <a href="/scan" className="active">Scan QR</a>
-            <a href="/librarian">Librarian</a>
-            <a href={import.meta.env.DEV ? "http://localhost:3001/" : "/"} className="nav-cta">Back to Site</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/#how" : "/#how"}>How it works</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/#bookshelf" : "/#bookshelf"}>Features</a>
+            <a href="/live" className={window.location.pathname.startsWith('/live') ? "active" : ""}>Live Map</a>
+            <a href="/scan" className={window.location.pathname.startsWith('/scan') ? "active" : ""}>Scan QR</a>
+            <a href="/librarian" className={window.location.pathname.startsWith('/librarian') ? "active" : ""}>Librarian</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/docs.html" : "/docs.html"}>Docs</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/contact.html" : "/contact.html"} className="nav-cta">Get early access</a>
           </div>
         </div>
       </nav>

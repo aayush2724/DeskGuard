@@ -81,10 +81,13 @@ export default function LivePage() {
             DeskGuard
           </a>
           <div className="nav-links">
-            <a href="/live" className="active">Live Map</a>
-            <a href="/scan">Scan QR</a>
-            <a href="/librarian">Librarian</a>
-            <a href={import.meta.env.DEV ? "http://localhost:3001/" : "/"} className="nav-cta">Back to Site</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/#how" : "/#how"}>How it works</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/#bookshelf" : "/#bookshelf"}>Features</a>
+            <a href="/live" className={window.location.pathname.startsWith('/live') ? "active" : ""}>Live Map</a>
+            <a href="/scan" className={window.location.pathname.startsWith('/scan') ? "active" : ""}>Scan QR</a>
+            <a href="/librarian" className={window.location.pathname.startsWith('/librarian') ? "active" : ""}>Librarian</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/docs.html" : "/docs.html"}>Docs</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/contact.html" : "/contact.html"} className="nav-cta">Get early access</a>
           </div>
         </div>
       </nav>

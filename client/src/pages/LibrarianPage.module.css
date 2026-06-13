@@ -29,6 +29,10 @@
 .statDot { position: absolute; top: 18px; right: 18px; width: 9px; height: 9px; border-radius: 50%; }
 .utilBar { height: 3px; background: rgba(255,255,255,.07); border-radius: 99px; overflow: hidden; margin-top: 8px; }
 .utilBar div { height: 100%; border-radius: 99px; transition: width .6s; }
+
+/* Bottom Layout */
+.twoCol { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; align-items: start; }
+
 /* Section */
 .section { background: rgba(15,31,22,.55); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .sectionHead { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
@@ -81,6 +85,7 @@
 @media (max-width: 900px) {
   .statsRow { grid-template-columns: repeat(3,1fr); }
   .content  { padding: 20px; }
+  .twoCol   { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .statsRow { grid-template-columns: repeat(2,1fr); }
