@@ -16,12 +16,11 @@ for (const file of htmlFiles) {
 // 2. Update all remaining HTML files' navbars
 const htmlNavRegex = /<div class="nav-links">([\s\S]*?)<\/div>/;
 const newHtmlNav = `<div class="nav-links">
-        <a href="how-it-works.html">How it works</a>
-        <a href="features.html">Features</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#bookshelf">Features</a>
         <a href="/live">Live Map</a>
         <a href="/scan">Scan QR</a>
         <a href="/librarian">Librarian</a>
-        <a href="docs.html">Docs</a>
         <a href="contact.html" class="nav-cta">Get early access</a>
       </div>`;
 
@@ -38,12 +37,11 @@ for (const file of fs.readdirSync(marketingDir).filter(f => f.endsWith('.html'))
 // 3. Update React pages' navbars
 const reactNavRegex = /<div className="nav-links">([\s\S]*?)<\/div>/;
 const newReactNav = `<div className="nav-links">
-            <a href={import.meta.env.DEV ? "http://localhost:3001/how-it-works.html" : "/how-it-works.html"}>How it works</a>
-            <a href={import.meta.env.DEV ? "http://localhost:3001/features.html" : "/features.html"}>Features</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/index.html#how" : "/index.html#how"}>How it works</a>
+            <a href={import.meta.env.DEV ? "http://localhost:3001/index.html#bookshelf" : "/index.html#bookshelf"}>Features</a>
             <a href="/live" className={window.location.pathname.startsWith('/live') ? "active" : ""}>Live Map</a>
             <a href="/scan" className={window.location.pathname.startsWith('/scan') ? "active" : ""}>Scan QR</a>
             <a href="/librarian" className={window.location.pathname.startsWith('/librarian') ? "active" : ""}>Librarian</a>
-            <a href={import.meta.env.DEV ? "http://localhost:3001/docs.html" : "/docs.html"}>Docs</a>
             <a href={import.meta.env.DEV ? "http://localhost:3001/contact.html" : "/contact.html"} className="nav-cta">Get early access</a>
           </div>`;
 
