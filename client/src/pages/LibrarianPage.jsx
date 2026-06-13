@@ -71,9 +71,9 @@ export default function LibrarianPage() {
           <a href={import.meta.env.DEV ? "http://localhost:3001/" : "/"} className="nav-logo">
             <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
               <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#4ADE80"/>
-              <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity=".4"/>
-              <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity=".4"/>
-              <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity=".7"/>
+              <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+              <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.4"/>
+              <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#4ADE80" opacity="0.7"/>
             </svg>
             DeskGuard
           </a>
