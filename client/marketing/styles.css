@@ -334,13 +334,11 @@ body > *:not(#webgl-canvas) {
 
 /* ── Floor preview ────────────────────────────────────── */
 .floor-preview {
-  background: rgba(5, 16, 10, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
+  background: transparent;
   border-radius: 20px;
-  padding: 24px 24px 16px;
+  padding: 0;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   opacity: 0;
   transform: translateY(24px) scale(.98);
 }
@@ -364,26 +362,13 @@ body > *:not(#webgl-canvas) {
   letter-spacing: .06em;
   margin-bottom: 14px;
 }
-/* ── 3D hero canvas container ─────────────────────────── */
+/* ── Flat grid hero container ─────────────────────────── */
 #hero-3d {
   width: 100%;
-  height: 500px;
-  border-radius: 12px;
+  border-radius: 18px;
   overflow: hidden;
   position: relative;
-}
-#hero-3d canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
-#hero-3d::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, rgba(5,16,10,.85));
-  pointer-events: none;
+  min-height: 0;
 }
 .floor-preview::after {
   content: '';
@@ -405,9 +390,9 @@ body > *:not(#webgl-canvas) {
   margin-top: 14px;
 }
 .legend-item { display: flex; align-items: center; gap: 7px; }
-.dot { width: 8px; height: 8px; border-radius: 3px; }
+.dot { width: 14px; height: 10px; border-radius: 3px; }
 .dot.free { background: #22c55e; }
-.dot.occupied { background: #dc2626; }
+.dot.occupied { background: #ef4444; }
 .dot.ghost { background: var(--amber); }
 
 /* ── Scroll hint ──────────────────────────────────────── */
