@@ -87,7 +87,7 @@ router.get('/qr-sheet', async (req, res) => {
 
     const cards = await Promise.all(rows.map(async ({ id, zone }) => {
       const url = `${origin}/live?checkin=${id}`
-      const qr  = await QRCode.toDataURL(url, { width: 200, margin: 1, color: { dark: '#05100a', light: '#ffffff' } })
+      const qr  = await QRCode.toDataURL(url, { width: 200, margin: 1, color: { dark: '#000000', light: '#ffffff' } })
       return `
         <div class="card">
           <img src="${qr}" alt="QR ${id}" />

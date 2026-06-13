@@ -7,7 +7,7 @@
   width: 100%; height: 100%;
   perspective: 1800px;
   overflow: hidden;
-  background: linear-gradient(135deg, #070c08 0%, #0b140f 50%, #0f1c14 100%);
+  background: #1A0819;
   display: flex; align-items: center; justify-content: center;
   cursor: grab; user-select: none; position: relative;
   touch-action: none;
@@ -25,15 +25,15 @@
 .floor {
   position: absolute; inset: -80px;
   background:
-    linear-gradient(90deg, rgba(74, 222, 128, 0.04) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(74, 222, 128, 0.04) 1px, transparent 1px),
-    linear-gradient(145deg, #090f0b 0%, #050806 100%);
+    linear-gradient(90deg, rgba(240, 201, 135, 0.04) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(240, 201, 135, 0.04) 1px, transparent 1px),
+    #1A0819;
   background-size: 52px 52px, 52px 52px, 100% 100%;
   border-radius: 12px;
   box-shadow:
     0 40px 100px rgba(0, 0, 0, 0.7),
     inset 0 0 120px rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(240, 201, 135, 0.1);
   transform: translateZ(-1px);
 }
 
@@ -44,8 +44,8 @@
 }
 .zoneBg {
   position: absolute; top: -5px; left: -5px;
-  background: rgba(11, 20, 15, 0.5);
-  border: 1px solid rgba(74, 222, 128, 0.08);
+  background: rgba(59, 21, 58, 0.5);
+  border: 1px solid rgba(240, 201, 135, 0.08);
   border-radius: 10px;
   transform: translateZ(0.5px);
 }
@@ -55,7 +55,7 @@
   font: 700 11px/1 'Space Grotesk', 'Inter', sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #4ade80;
+  color: #F0C987;
   opacity: 0.7;
   transform: translateZ(1px);
   white-space: nowrap;
@@ -118,12 +118,12 @@
   position: absolute;
   width: 32px; height: 18px;
   left: 29px; top: 18px;
-  background: #090f0b;
+  background: #2A0E29;
   border-radius: 2px;
-  border: 1.5px solid #2d3748;
+  border: 1.5px solid #A38F75;
   transform-origin: bottom center;
   transform: translateZ(28px) rotateX(-80deg);
-  box-shadow: 0 -2px 8px rgba(74,222,128,0.15);
+  box-shadow: 0 -2px 8px rgba(207,201,177,0.15);
 }
 
 /* ── Monitor Stand ───────────────────────────────────── */
@@ -131,7 +131,7 @@
   position: absolute;
   width: 4px; height: 4px;
   left: 43px; top: 18px;
-  background: #4a5568;
+  background: #5E5C4F;
   transform: translateZ(26px);
 }
 
@@ -140,7 +140,7 @@
   position: absolute;
   width: 26px; height: 26px;
   left: 32px; top: 58px;
-  background: #1e293b;
+  background: #0a0a0a;
   border-radius: 3px;
   transform: translateZ(14px);
   box-shadow: 0 4px 6px rgba(0,0,0,0.4);
@@ -151,7 +151,7 @@
   position: absolute;
   width: 26px; height: 20px;
   left: 32px; top: 84px;
-  background: #0f172a;
+  background: #1A0819;
   border-radius: 4px 4px 0 0;
   transform-origin: top center;
   transform: translateZ(14px) rotateX(-85deg);
@@ -163,7 +163,7 @@
   width: 100%; text-align: center;
   bottom: -4px; left: 0;
   font: 600 8px/1 'Space Mono', monospace;
-  color: #a3b1c6;
+  color: #E7D3B5;
   transform: translateZ(32px);
   opacity: 0;
   transition: opacity 0.2s;
@@ -206,10 +206,10 @@
 .resetBtn {
   position: absolute;
   top: 16px; right: 16px;
-  background: rgba(15, 31, 22, 0.85);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(74, 222, 128, 0.25);
-  color: #4ade80;
+  border: 1px solid rgba(207, 201, 177, 0.25);
+  color: #F0C987;
   font: 600 12px/1 'Space Grotesk', sans-serif;
   padding: 10px 16px;
   border-radius: 8px;
@@ -219,9 +219,9 @@
   z-index: 50;
 }
 .resetBtn:hover {
-  background: rgba(74, 222, 128, 0.15);
-  border-color: #4ade80;
-  box-shadow: 0 4px 24px rgba(74,222,128,0.25);
+  background: rgba(207, 201, 177, 0.15);
+  border-color: #F0C987;
+  box-shadow: 0 4px 24px rgba(207,201,177,0.25);
 }
 
 .legend {
@@ -229,9 +229,9 @@
   bottom: 16px; left: 50%;
   transform: translateX(-50%);
   display: flex; gap: 20px;
-  background: rgba(15, 31, 22, 0.85);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(74, 222, 128, 0.2);
+  border: 1px solid rgba(207, 201, 177, 0.2);
   padding: 10px 20px;
   border-radius: 10px;
   z-index: 50;

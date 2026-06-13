@@ -2,26 +2,27 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #05100a;
-  --bg-2:      #080f0b;
-  --surface:   #0f1f16;
-  --surface-2: #162b1d;
-  --border:    rgba(74,222,128,.10);
-  --border-2:  rgba(74,222,128,.22);
-  --green:     #4ADE80;
-  --green-dim: rgba(74,222,128,.12);
-  --amber:     #FBBF24;
-  --red:       #F87171;
-  --gray:      #6B7280;
-  --text:      #dff0e7;
-  --text-2:    #7fa892;
-  --text-3:    #3d5a47;
+  --bg:        #1A0819;
+  --bg-2:      #2A0E29;
+  --surface:   #3B153A;
+  --surface-2: #4A1E49;
+  --border:    rgba(240, 201, 135, 0.12);
+  --border-2:  rgba(240, 201, 135, 0.25);
+  --green:     #F0C987;
+  --green-dim: rgba(240, 201, 135, 0.15);
+  --amber:     #D4AF37;
+  --red:       #D95D7D;
+  --gray:      #7A5C79;
+  --text:      #FDF5E6;
+  --text-2:    #E7D3B5;
+  --text-3:    #A38F75;
   --mono:      'Space Mono', monospace;
   --sans:      'Space Grotesk', system-ui, sans-serif;
   --display:   'Syne', sans-serif;
   --radius:    14px;
   --radius-sm: 8px;
 }
+
 
 html, body, #root { height: 100%; }
 body {
@@ -57,21 +58,21 @@ button { font-family: var(--sans); }
 .nav-links a { font-size: 13px; color: var(--text-2); font-weight: 600; transition: color .2s; }
 .nav-links a:hover, .nav-links a.active { color: var(--green); }
 .nav-cta {
-  background: rgba(74, 222, 128, 0.15) !important;
+  background: rgba(240, 201, 135, 0.15) !important;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(74, 222, 128, 0.4) !important;
+  border: 1px solid rgba(240, 201, 135, 0.4) !important;
   color: var(--green) !important;
   padding: 7px 16px; border-radius: 6px; font-weight: 700;
   font-size: 12px; text-transform: uppercase; letter-spacing: .03em;
   transition: all .2s;
 }
-.nav-cta:hover { background: rgba(74, 222, 128, 0.25) !important; border-color: var(--green) !important; }
+.nav-cta:hover { background: rgba(240, 201, 135, 0.25) !important; border-color: var(--green) !important; }
 
 /* ── Buttons ── */
 .btn-primary {
-  background: rgba(74, 222, 128, 0.1);
+  background: rgba(240, 201, 135, 0.1);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(74, 222, 128, 0.35);
+  border: 1px solid rgba(240, 201, 135, 0.35);
   color: var(--green);
   font-weight: 700; font-size: 13px; letter-spacing: .02em;
   text-transform: uppercase; padding: 11px 26px;
@@ -80,10 +81,10 @@ button { font-family: var(--sans); }
   display: inline-flex; align-items: center; gap: 8px;
 }
 .btn-primary:hover {
-  background: rgba(74, 222, 128, 0.2);
+  background: rgba(240, 201, 135, 0.2);
   border-color: var(--green);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(74,222,128,0.15);
+  box-shadow: 0 8px 24px rgba(240,201,135,0.15);
 }
 
 .btn-outline {
@@ -155,7 +156,7 @@ button { font-family: var(--sans); }
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(74,222,128,.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(240,201,135,.2); border-radius: 3px; }
 
 /* ── Animations ── */
 @keyframes modalIn {

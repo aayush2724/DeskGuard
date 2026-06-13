@@ -209,7 +209,7 @@ export default function ThreeScene({ desks, onSelectDesk, selectedDeskId }) {
       ctx.fillStyle = 'rgba(0,0,0,0)'
       ctx.fillRect(0,0,512,64)
       ctx.font = 'bold 28px "Space Mono", monospace'
-      ctx.fillStyle = prefix === 'A' ? '#4ade80' : prefix === 'B' ? '#fbbf24' : '#94a3b8'
+      ctx.fillStyle = prefix === 'A' ? '#F0C987' : prefix === 'B' ? '#fbbf24' : '#94a3b8'
       ctx.fillText(zone.toUpperCase(), 12, 44)
       const tex   = new THREE.CanvasTexture(canvas)
       const plane = new THREE.Mesh(
@@ -359,7 +359,7 @@ export default function ThreeScene({ desks, onSelectDesk, selectedDeskId }) {
           boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           transform: 'translateY(-50%)'
         }}>
-          <div style={{ fontSize: '11px', color: '#4ade80', fontFamily: 'monospace', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Desk {hoveredDesk.id}</div>
+          <div style={{ fontSize: '11px', color: '#F0C987', fontFamily: 'monospace', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Desk {hoveredDesk.id}</div>
           <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '4px' }}>Status: {STATUS[hoveredDesk.status]?.label || 'Free'}</div>
           <div style={{ fontSize: '12px', color: '#9ca3af' }}>Zone: {hoveredDesk.zone}</div>
         </div>

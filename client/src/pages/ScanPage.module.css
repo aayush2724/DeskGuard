@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #05100a;
+  background: #1A0819;
   color: #dff0e7;
   overflow-x: hidden;
 }
@@ -41,7 +41,7 @@
 
 .subtitle {
   font-size: 1rem;
-  color: #7fa892;
+  color: #E7D3B5;
   margin-top: 8px;
   max-width: 600px;
 }
@@ -61,7 +61,7 @@
 
 /* ── Card Styling ────────────────────────────────────── */
 .card {
-  background: rgba(15, 31, 22, 0.65);
+  background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(74, 222, 128, 0.12);
   border-radius: 16px;
@@ -109,7 +109,7 @@
 .tabBtn {
   background: transparent;
   border: none;
-  color: #7fa892;
+  color: #E7D3B5;
   padding: 6px 14px;
   font-weight: 600;
   font-size: 12px;
@@ -123,8 +123,8 @@
 }
 
 .tabBtn.activeTab {
-  background: #4ade80;
-  color: #05100a;
+  background: #F0C987;
+  color: #1A0819;
 }
 
 /* ── Scanner Viewport ─────────────────────────────────── */
@@ -174,8 +174,8 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, transparent, #4ade80, transparent);
-  box-shadow: 0 0 10px #4ade80, 0 0 20px #4ade80;
+  background: linear-gradient(90deg, transparent, #F0C987, transparent);
+  box-shadow: 0 0 10px #F0C987, 0 0 20px #F0C987;
   animation: scanLaser 3.5s linear infinite;
 }
 
@@ -196,7 +196,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  border: 3px solid #4ade80;
+  border: 3px solid #F0C987;
   opacity: 0.85;
 }
 
@@ -225,7 +225,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  color: #7fa892;
+  color: #E7D3B5;
   font-weight: 500;
   font-size: 14px;
 }
@@ -266,13 +266,13 @@
 }
 
 .select:focus {
-  border-color: #4ade80;
+  border-color: #F0C987;
 }
 
 .selectWrapper::after {
   content: '▼';
   font-size: 9px;
-  color: #7fa892;
+  color: #E7D3B5;
   position: absolute;
   right: 14px;
   top: 50%;
@@ -308,13 +308,13 @@
 
 .dropZone:hover {
   background: rgba(74, 222, 128, 0.05);
-  border-color: #4ade80;
+  border-color: #F0C987;
 }
 
 .uploadIcon {
   width: 44px;
   height: 44px;
-  color: #4ade80;
+  color: #F0C987;
   opacity: 0.8;
 }
 
@@ -326,7 +326,7 @@
 
 .dropZone p {
   font-size: 12px;
-  color: #7fa892;
+  color: #E7D3B5;
 }
 
 /* ── Manual Search Mode ──────────────────────────────── */
@@ -339,7 +339,7 @@
 
 .helpText {
   font-size: 13px;
-  color: #7fa892;
+  color: #E7D3B5;
   line-height: 1.5;
 }
 
@@ -359,7 +359,7 @@
   font-family: 'Space Mono', monospace;
   font-weight: 700;
   font-size: 1.3rem;
-  color: #4ade80;
+  color: #F0C987;
   background: rgba(74, 222, 128, 0.1);
   padding: 4px 12px;
   border-radius: 6px;
@@ -397,7 +397,7 @@
 }
 
 .metaRow .label {
-  color: #7fa892;
+  color: #E7D3B5;
 }
 
 .metaRow .value {
@@ -413,7 +413,7 @@
 .btnLink {
   background: transparent;
   border: none;
-  color: #7fa892;
+  color: #E7D3B5;
   font-weight: 600;
   font-size: 12px;
   cursor: pointer;
@@ -452,7 +452,7 @@
 
 .placeholderContent p {
   font-size: 12px;
-  color: #7fa892;
+  color: #E7D3B5;
   max-width: 280px;
   line-height: 1.5;
 }
@@ -473,7 +473,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #4ade80;
+  background: #F0C987;
   position: relative;
 }
 
@@ -482,7 +482,7 @@
   position: absolute;
   inset: -14px;
   border-radius: 50%;
-  border: 1px solid #4ade80;
+  border: 1px solid #F0C987;
   opacity: 0.5;
   animation: scanPulse 1.8s infinite ease-out;
 }
@@ -507,7 +507,7 @@
 .selectMini {
   background: rgba(5, 16, 10, 0.8);
   border: 1px solid rgba(74, 222, 128, 0.15);
-  color: #4ade80;
+  color: #F0C987;
   padding: 6px 12px;
   font-size: 11px;
   font-weight: 700;
@@ -526,7 +526,7 @@
 .qrCodeImageContainer {
   position: relative;
   cursor: pointer;
-  background: #090f0b;
+  background: #2A0E29;
   border: 2px solid rgba(74, 222, 128, 0.2);
   border-radius: 12px;
   padding: 12px;
@@ -539,7 +539,7 @@
 
 .qrCodeImageContainer:hover {
   transform: scale(1.03);
-  border-color: #4ade80;
+  border-color: #F0C987;
   box-shadow: 0 4px 24px rgba(74, 222, 128, 0.25);
 }
 
@@ -572,8 +572,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #4ade80;
-  border: 1px solid #4ade80;
+  color: #F0C987;
+  border: 1px solid #F0C987;
   padding: 6px 12px;
   border-radius: 6px;
   background: rgba(74, 222, 128, 0.1);
@@ -585,9 +585,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7fa892;
+  color: #E7D3B5;
   font-size: 12px;
-  background: #090f0b;
+  background: #2A0E29;
   border-radius: 6px;
 }
 
@@ -601,7 +601,7 @@
 .downloadLink {
   font-size: 11px;
   font-weight: 700;
-  color: #4ade80;
+  color: #F0C987;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: opacity 0.2s;

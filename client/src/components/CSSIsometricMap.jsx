@@ -6,11 +6,11 @@ import { useState, useRef, useCallback } from 'react'
 import styles from './CSSIsometricMap.module.css'
 
 const STATUS = {
-  free:               { color: '#4ade80', dark: '#16a34a', darker: '#15803d', label: 'Free' },
-  occupied:           { color: '#f87171', dark: '#dc2626', darker: '#b91c1c', label: 'Occupied' },
-  away:               { color: '#fbbf24', dark: '#d97706', darker: '#b45309', label: 'Away' },
-  still_here_pending: { color: '#fbbf24', dark: '#d97706', darker: '#b45309', label: 'Away' },
-  abandoned:          { color: '#9ca3af', dark: '#6b7280', darker: '#4b5563', label: 'Abandoned' },
+  free:               { color: '#F0C987', dark: '#D4AF37', darker: '#E7D3B5', label: 'Free' },
+  occupied:           { color: '#D95D7D', dark: '#8B4513', darker: '#5E2F29', label: 'Occupied' },
+  away:               { color: '#D4AF37', dark: '#706040', darker: '#A38F75', label: 'Away' },
+  still_here_pending: { color: '#D4AF37', dark: '#706040', darker: '#A38F75', label: 'Away' },
+  abandoned:          { color: '#7A5C79', dark: '#A38F75', darker: '#5D2A5C', label: 'Abandoned' },
 }
 
 const ZONE_DEFS = [

@@ -14,11 +14,11 @@
 
   /* ── Status config ───────────────────────────────────── */
   const STATUS = {
-    free:               { color: '#16a34a', bg: '#f0fdf4', bar: '#22c55e', label: 'Free' },
-    occupied:           { color: '#dc2626', bg: '#fef2f2', bar: '#ef4444', label: 'Occupied' },
-    away:               { color: '#d97706', bg: '#fffbeb', bar: '#f59e0b', label: 'Away' },
-    still_here_pending: { color: '#d97706', bg: '#fffbeb', bar: '#f59e0b', label: 'Away' },
-    abandoned:          { color: '#6b7280', bg: '#f9fafb', bar: '#9ca3af', label: 'Abandoned' },
+    free:               { color: '#F0C987', bg: '#3B153A', bar: '#F0C987', label: 'Free' },
+    occupied:           { color: '#D95D7D', bg: '#2A0E29', bar: '#D95D7D', label: 'Occupied' },
+    away:               { color: '#D4AF37', bg: '#3B153A', bar: '#D4AF37', label: 'Away' },
+    still_here_pending: { color: '#D4AF37', bg: '#3B153A', bar: '#D4AF37', label: 'Away' },
+    abandoned:          { color: '#7A5C79', bg: '#1A0819', bar: '#7A5C79', label: 'Abandoned' },
   };
 
   /* ── Desk layout (mirrors seed.js exactly) ─────────── */
@@ -69,13 +69,14 @@
 
   const card = document.createElement('div');
   card.style.cssText = `
-    background: #ffffff;
+    background: #3B153A;
     border-radius: 18px;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
     padding: 20px 22px 18px;
     font-family: 'Space Grotesk', system-ui, sans-serif;
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(240, 201, 135, 0.2);
   `;
 
   /* Card header */
@@ -86,7 +87,7 @@
     justify-content: space-between;
     margin-bottom: 14px;
     padding-bottom: 14px;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid rgba(207, 201, 177, 0.08);
   `;
 
   const dotWrap = document.createElement('div');
@@ -94,7 +95,7 @@
   const liveDot = document.createElement('span');
   liveDot.style.cssText = `
     width: 10px; height: 10px; border-radius: 50%;
-    background: #22c55e;
+    background: #E7E0C9;
     display: inline-block;
     box-shadow: 0 0 0 3px rgba(34,197,94,.2);
     animation: mapPulse 2s infinite;
@@ -122,7 +123,7 @@
 
   const title = document.createElement('span');
   title.style.cssText = `
-    font-size: 14px; font-weight: 700; color: #1e293b;
+    font-size: 14px; font-weight: 700; color: #F0C987;
     letter-spacing: -0.01em;
   `;
   title.textContent = 'Library Map · Floor 2';
@@ -227,7 +228,7 @@
     gap: 18px;
     margin-top: 14px;
     padding-top: 12px;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid rgba(207, 201, 177, 0.08);
     flex-wrap: wrap;
   `;
 
@@ -241,7 +242,7 @@
     const item = document.createElement('span');
     item.style.cssText = `
       display: flex; align-items: center; gap: 7px;
-      font-size: 11px; color: #64748b; font-weight: 500;
+      font-size: 11px; color: #E7D3B5; font-weight: 500;
     `;
     const dot = document.createElement('span');
     dot.style.cssText = `

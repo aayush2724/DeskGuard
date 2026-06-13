@@ -125,11 +125,11 @@
       float finalNoise = n3 * 0.5 + 0.5;
 
       // ── Color palette ──────────────────────────────────────
-      // Deep void black-green base
-      vec3 colBase   = vec3(0.031, 0.063, 0.047);  // #081010 deep
-      vec3 colMid    = vec3(0.055, 0.18,  0.11);   // dark forest
-      vec3 colAccent = vec3(0.22,  0.72,  0.37);   // #38B85E plasma green
-      vec3 colFog    = vec3(0.08,  0.22,  0.15);   // subtle fog
+      // Luxury Deep Plum base
+      vec3 colBase   = vec3(0.10, 0.03, 0.09); // #1A0819 approx
+      vec3 colMid    = vec3(0.23, 0.08, 0.22); // #3B153A approx
+      vec3 colAccent = vec3(0.94, 0.79, 0.53); // #F0C987 Soft Plum Gold
+      vec3 colFog    = vec3(0.29, 0.12, 0.28); // Muted plum fog
 
       // Build color from noise layers
       vec3 col = mix(colBase, colMid, smoothstep(0.3, 0.7, n1 * 0.5 + 0.5));
