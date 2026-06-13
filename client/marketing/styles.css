@@ -1615,3 +1615,63 @@ body > *:not(#webgl-canvas) {
 .book-orange:hover {
   transform: translateY(-30px) translateZ(30px) rotate(-1deg);
 }
+
+/* ========================================= */
+/* PLUM AND XANTHOUS CUSTOM THEME OVERRIDES  */
+/* ========================================= */
+
+.how, .bookshelf-section {
+  background-color: #F0C987 !important; /* Xanthous */
+  background-image: none !important;
+  color: #3B153A !important; /* Plum */
+}
+
+.how h2, .how .eyebrow, .how p,
+.bookshelf-section h2, .bookshelf-section .eyebrow, .bookshelf-section p {
+  color: #3B153A !important;
+}
+
+/* How Cards */
+.how-card h3, .how-card p, .how-card-num {
+  color: #3B153A !important;
+}
+.how-card {
+  background: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(59, 21, 58, 0.2) !important;
+}
+.how-card.active {
+  border-color: rgba(59, 21, 58, 0.6) !important;
+  box-shadow: 0 0 40px rgba(59, 21, 58, 0.15), 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+}
+.how-track {
+  background: transparent !important;
+}
+.how-card-icon svg,
+.how-card-icon svg path,
+.how-card-icon svg circle,
+.how-card-icon svg rect {
+  stroke: #3B153A !important;
+}
+
+.how-avatar {
+  background: #F0C987 !important;
+  border-color: #3B153A !important;
+  color: #3B153A !important;
+  box-shadow: 0 0 20px rgba(59, 21, 58, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+.how-avatar svg {
+  fill: #3B153A !important;
+  color: #3B153A !important;
+}
+
+/* Bookshelf section */
+.bookshelf-section .book-title {
+  color: #3B153A !important;
+}
+.bookshelf-section .book-icon {
+  color: #3B153A !important;
+}
+.bookshelf-section .book-icon svg {
+  stroke: #3B153A !important;
+}
+
