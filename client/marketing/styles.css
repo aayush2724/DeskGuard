@@ -510,7 +510,7 @@ body > *:not(#webgl-canvas) {
 /* ── How it works ─────────────────────────────────────── */
 .how {
   padding: 0;
-  background: var(--bg-2);
+  background: var(--bg-3);
   overflow: visible;
 }
 .how-header {
@@ -1447,7 +1447,7 @@ body > *:not(#webgl-canvas) {
 /* ── Bookshelf ────────────────────────────────────────── */
 .bookshelf-section {
   padding: 100px 32px 140px;
-  background: var(--bg);
+  background: var(--bg-3);
 }
 .bookshelf-container {
   max-width: 900px;
