@@ -11,7 +11,7 @@
     "install:all": "npm run server:install && npm run client:install",
     "server:dev": "cd server && npm run dev",
     "client:dev": "cd client && npm run dev",
-    "dev": "npm run db:up && npx concurrently -n SERVER,CLIENT -c green,cyan \"npm run server:dev\" \"npm run client:dev\"",
+    "dev": "npm run db:up && concurrently -n SERVER,CLIENT -c green,cyan \"npm run server:dev\" \"npm run client:dev\"",
     "dev:fast": "npm run db:up && npm run server:dev"
   },
   "devDependencies": {
