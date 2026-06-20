@@ -8,6 +8,27 @@ let broadcastFn = null
 export const setBroadcast = (fn) => { broadcastFn = fn }
 const broadcast = (p) => broadcastFn && broadcastFn(p)
 
+const DESK_ID_RE = /^[A-E]-\d{2}$/
+function validId(id) { return typeof id === 'string' && DESK_ID_RE.test(id) }
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+}
+
+// Auth middleware for write operations (POST)
+function requireAuth(req, res, next) {
+  const key = req.headers['x-api-key']
+  const expected = process.env.LIBRARIAN_API_KEY
+  if (!expected) {
+    console.error('[librarian] LIBRARIAN_API_KEY not set — rejecting write')
+    return res.status(500).json({ error: 'Server misconfigured' })
+  }
+  if (!key || key !== expected) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+  next()
+}
+
 async function log(deskId, type, msg) {
   await pool.query(
     'INSERT INTO activity_log (desk_id, event_type, message) VALUES ($1,$2,$3)',
@@ -16,8 +37,9 @@ async function log(deskId, type, msg) {
 }
 
 // POST /api/librarian/reset/:id — manually reset one desk to free
-router.post('/reset/:id', async (req, res) => {
+router.post('/reset/:id', requireAuth, async (req, res) => {
   const { id } = req.params
+  if (!validId(id)) return res.status(400).json({ error: 'Invalid desk ID' })
   try {
     await pool.query(
       "UPDATE desks SET status='free', checkin_at=NULL, away_at=NULL, state_at=NOW() WHERE id=$1",
@@ -25,16 +47,18 @@ router.post('/reset/:id', async (req, res) => {
     )
     await redis.del(`checkin:${id}`, `away:${id}`, `grace:${id}`)
     const desk = (await pool.query('SELECT * FROM desks WHERE id=$1', [id])).rows[0]
+    if (!desk) return res.status(404).json({ error: 'Desk not found' })
     await log(id, 'reset', `Desk ${id} manually reset by librarian`)
     broadcast({ type: 'desk_update', desk })
     res.json({ ok: true, desk })
   } catch (e) {
-    res.status(500).json({ error: e.message })
+    console.error('[librarian] reset error:', e.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
 // POST /api/librarian/reset-all — reset all abandoned desks
-router.post('/reset-all', async (req, res) => {
+router.post('/reset-all', requireAuth, async (req, res) => {
   try {
     const { rows } = await pool.query("SELECT id FROM desks WHERE status='abandoned'")
     for (const { id } of rows) {
@@ -49,7 +73,8 @@ router.post('/reset-all', async (req, res) => {
     await log(null, 'reset', `Librarian reset all ${rows.length} abandoned desk(s)`)
     res.json({ ok: true, count: rows.length })
   } catch (e) {
-    res.status(500).json({ error: e.message })
+    console.error('[librarian] reset-all error:', e.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -61,7 +86,8 @@ router.get('/log', async (req, res) => {
     )
     res.json(rows)
   } catch (e) {
-    res.status(500).json({ error: e.message })
+    console.error('[librarian] log error:', e.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -75,7 +101,8 @@ router.get('/stats', async (req, res) => {
     rows.forEach(r => { stats[r.status] = parseInt(r.count) })
     res.json(stats)
   } catch (e) {
-    res.status(500).json({ error: e.message })
+    console.error('[librarian] stats error:', e.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -86,13 +113,13 @@ router.get('/qr-sheet', async (req, res) => {
     const origin = `${req.protocol}://${req.get('host')}`
 
     const cards = await Promise.all(rows.map(async ({ id, zone }) => {
-      const url = `${origin}/live?checkin=${id}`
+      const url = `${origin}/live?checkin=${encodeURIComponent(id)}`
       const qr  = await QRCode.toDataURL(url, { width: 200, margin: 1, color: { dark: '#000000', light: '#ffffff' } })
       return `
         <div class="card">
-          <img src="${qr}" alt="QR ${id}" />
-          <div class="desk-id">${id}</div>
-          <div class="zone">${zone}</div>
+          <img src="${qr}" alt="QR ${escapeHtml(id)}" />
+          <div class="desk-id">${escapeHtml(id)}</div>
+          <div class="zone">${escapeHtml(zone)}</div>
         </div>`
     }))
 
@@ -121,7 +148,8 @@ router.get('/qr-sheet', async (req, res) => {
 </body>
 </html>`)
   } catch (e) {
-    res.status(500).json({ error: e.message })
+    console.error('[librarian] qr-sheet error:', e.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 

@@ -18,8 +18,12 @@ export default function LibrarianPage() {
   const [log,   setLog]     = useState([])
   const [filter, setFilter] = useState('all')
   const [toast, setToast]   = useState(null)
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('deskguard_librarian_key') || '')
+  const [showKeyInput, setShowKeyInput] = useState(() => !localStorage.getItem('deskguard_librarian_key'))
 
   const showToast = (msg, ok = true) => { setToast({ msg, ok }); setTimeout(() => setToast(null), 3000) }
+
+  const authHeaders = apiKey ? { 'X-Api-Key': apiKey } : {}
 
   const load = useCallback(async () => {
     const [dr, lr] = await Promise.all([fetch(`${BASE}/desks`), fetch(`${BASE}/librarian/log`)])
@@ -43,13 +47,31 @@ export default function LibrarianPage() {
     return () => es.close()
   }, [load])
 
+  const handleLogin = (e) => {
+    e.preventDefault()
+    const val = e.target.elements.key.value.trim()
+    if (!val) return
+    localStorage.setItem('deskguard_librarian_key', val)
+    setApiKey(val)
+    setShowKeyInput(false)
+    showToast('Authenticated', true)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('deskguard_librarian_key')
+    setApiKey('')
+    setShowKeyInput(true)
+  }
+
   const reset = async (id) => {
-    const r = await fetch(`${BASE}/librarian/reset/${id}`, { method: 'POST' })
+    const r = await fetch(`${BASE}/librarian/reset/${id}`, { method: 'POST', headers: authHeaders })
     if (r.ok) { showToast(`✓ Desk ${id} reset`); load() }
+    else if (r.status === 401) { showToast('Unauthorized — check API key', false); setShowKeyInput(true) }
   }
   const resetAll = async () => {
-    const r = await fetch(`${BASE}/librarian/reset-all`, { method: 'POST' })
+    const r = await fetch(`${BASE}/librarian/reset-all`, { method: 'POST', headers: authHeaders })
     if (r.ok) { const d = await r.json(); showToast(`✓ Reset ${d.count} abandoned desks`); load() }
+    else if (r.status === 401) { showToast('Unauthorized — check API key', false); setShowKeyInput(true) }
   }
 
   const counts = { free:0, occupied:0, away:0, abandoned:0 }
@@ -88,6 +110,26 @@ export default function LibrarianPage() {
         </div>
       </nav>
 
+      {/* Auth Gate */}
+      {showKeyInput && (
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 20px' }}>
+          <form onSubmit={handleLogin} style={{ display:'flex', flexDirection:'column', gap:'12px', maxWidth:'340px', width:'100%' }}>
+            <h2 style={{ color:'#F0C987', margin:0, fontSize:'18px', textAlign:'center' }}>Librarian Access</h2>
+            <p style={{ color:'#9ca3af', fontSize:'12px', textAlign:'center', margin:0 }}>Enter the librarian API key to manage desks.</p>
+            <input
+              name="key"
+              type="password"
+              placeholder="API Key"
+              autoFocus
+              style={{ padding:'10px 14px', background:'#0f1f16', border:'1px solid #2d4a3e', borderRadius:'8px', color:'#fff', fontSize:'13px' }}
+            />
+            <button type="submit" className="btn-primary" style={{ justifyContent:'center' }}>Authenticate</button>
+          </form>
+        </div>
+      )}
+
+      {!showKeyInput && (
+      <>
       <div className={styles.header}>
         <div>
           <div className={styles.badge}><span className="pulse-dot" />Librarian Dashboard · Live</div>
@@ -96,6 +138,7 @@ export default function LibrarianPage() {
         </div>
         <div className={styles.headerActions}>
           <a href="/live" className="btn-outline" style={{fontSize:12,padding:'9px 18px'}}>← Back to Map</a>
+          <button className="btn-ghost" onClick={handleLogout} style={{fontSize:11,padding:'8px 14px'}}>Logout</button>
           {abandoned.length > 0 && (
             <button className="btn-primary" onClick={resetAll}>Reset All Abandoned ({abandoned.length})</button>
           )}
@@ -204,6 +247,8 @@ export default function LibrarianPage() {
         <div className={styles.toast} style={{ borderColor: toast.ok ? 'rgba(74,222,128,.35)':'rgba(248,113,113,.35)', color: toast.ok ? '#4ADE80':'#F87171' }}>
           {toast.msg}
         </div>
+      )}
+      </>
       )}
     </div>
   )
