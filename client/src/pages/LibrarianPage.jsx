@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import styles from './LibrarianPage.module.css'
-
-const BASE = '/api'
+import BASE from '../api.js'
 
 function timeSince(ts) {
   if (!ts) return '—'

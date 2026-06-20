@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-
-const BASE = '/api'
+import BASE from '../api.js'
 
 export function useDesks() {
   const [desks, setDesks]           = useState([])

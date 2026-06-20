@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd client && npm install && npm run build && cp dist/index.html dist/app.html && cp -r marketing/* dist/ && cp marketing/index.html dist/index.html",
+  "outputDirectory": "client/dist",
+  "framework": null,
+  "installCommand": "npm install && cd client && npm install",
+  "rewrites": [
+    { "source": "/live", "destination": "/app.html" },
+    { "source": "/scan", "destination": "/app.html" },
+    { "source": "/librarian", "destination": "/app.html" }
+  ]
+}
