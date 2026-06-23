@@ -14,7 +14,8 @@ services:
           name: deskguard-db
           property: connectionString
       - key: REDIS_URL
-        fromRedis:
+        fromService:
+          type: redis
           name: deskguard-redis
           property: connectionString
       - key: AWAY_TTL_SECONDS
@@ -26,11 +27,12 @@ services:
       - key: ALLOWED_ORIGINS
         sync: false
 
+  - type: redis
+    name: deskguard-redis
+    plan: free
+
 databases:
   - name: deskguard-db
     plan: free
     databaseName: deskguard
     ipAllowList: []
-
-  - name: deskguard-redis
-    plan: free
