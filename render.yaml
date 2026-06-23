@@ -30,6 +30,7 @@ services:
   - type: redis
     name: deskguard-redis
     plan: free
+    ipAllowList: []
 
 databases:
   - name: deskguard-db
