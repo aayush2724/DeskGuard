@@ -22,13 +22,39 @@ export default function LibrarianPage() {
 
   const showToast = (msg, ok = true) => { setToast({ msg, ok }); setTimeout(() => setToast(null), 3000) }
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('deskguard_librarian_key')
+    setApiKey('')
+    setShowKeyInput(true)
+  }, [])
+
   const authHeaders = apiKey ? { 'X-Api-Key': apiKey } : {}
 
   const load = useCallback(async () => {
-    const [dr, lr] = await Promise.all([fetch(`${BASE}/desks`), fetch(`${BASE}/librarian/log`)])
-    if (dr.ok) setDesks(await dr.json())
-    if (lr.ok) setLog(await lr.json())
-  }, [])
+    try {
+      const drPromise = fetch(`${BASE}/desks`)
+      const lrPromise = apiKey
+        ? fetch(`${BASE}/librarian/log`, { headers: { 'X-Api-Key': apiKey } })
+        : Promise.resolve(null)
+
+      const [dr, lr] = await Promise.all([drPromise, lrPromise])
+
+      if (dr.ok) {
+        setDesks(await dr.json())
+      }
+
+      if (lr) {
+        if (lr.ok) {
+          setLog(await lr.json())
+        } else if (lr.status === 401) {
+          showToast('Unauthorized — check API key', false)
+          handleLogout()
+        }
+      }
+    } catch (e) {
+      console.error('[librarian] load error:', e)
+    }
+  }, [apiKey, handleLogout])
 
   useEffect(() => {
     load()
@@ -56,21 +82,15 @@ export default function LibrarianPage() {
     showToast('Authenticated', true)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('deskguard_librarian_key')
-    setApiKey('')
-    setShowKeyInput(true)
-  }
-
   const reset = async (id) => {
     const r = await fetch(`${BASE}/librarian/reset/${id}`, { method: 'POST', headers: authHeaders })
     if (r.ok) { showToast(`✓ Desk ${id} reset`); load() }
-    else if (r.status === 401) { showToast('Unauthorized — check API key', false); setShowKeyInput(true) }
+    else if (r.status === 401) { showToast('Unauthorized — check API key', false); handleLogout() }
   }
   const resetAll = async () => {
     const r = await fetch(`${BASE}/librarian/reset-all`, { method: 'POST', headers: authHeaders })
     if (r.ok) { const d = await r.json(); showToast(`✓ Reset ${d.count} abandoned desks`); load() }
-    else if (r.status === 401) { showToast('Unauthorized — check API key', false); setShowKeyInput(true) }
+    else if (r.status === 401) { showToast('Unauthorized — check API key', false); handleLogout() }
   }
 
   const counts = { free:0, occupied:0, away:0, abandoned:0 }
@@ -137,6 +157,15 @@ export default function LibrarianPage() {
         </div>
         <div className={styles.headerActions}>
           <a href="/live" className="btn-outline" style={{fontSize:12,padding:'9px 18px'}}>← Back to Map</a>
+          <a
+            href={`${BASE}/librarian/qr-sheet?key=${encodeURIComponent(apiKey)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline"
+            style={{ fontSize: 12, padding: '9px 18px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+          >
+            🖨️ Print QRs
+          </a>
           <button className="btn-ghost" onClick={handleLogout} style={{fontSize:11,padding:'8px 14px'}}>Logout</button>
           {abandoned.length > 0 && (
             <button className="btn-primary" onClick={resetAll}>Reset All Abandoned ({abandoned.length})</button>

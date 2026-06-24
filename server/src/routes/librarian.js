@@ -15,9 +15,9 @@ function escapeHtml(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 }
 
-// Auth middleware for write operations (POST)
+// Auth middleware for librarian operations (GET and POST)
 function requireAuth(req, res, next) {
-  const key = req.headers['x-api-key']
+  const key = req.headers['x-api-key'] || req.query.key
   const expected = process.env.LIBRARIAN_API_KEY
   if (!expected) {
     console.error('[librarian] LIBRARIAN_API_KEY not set — rejecting write')
@@ -79,7 +79,7 @@ router.post('/reset-all', requireAuth, async (req, res) => {
 })
 
 // GET /api/librarian/log — last 100 activity log entries
-router.get('/log', async (req, res) => {
+router.get('/log', requireAuth, async (req, res) => {
   try {
     const { rows } = await pool.query(
       'SELECT * FROM activity_log ORDER BY created_at DESC LIMIT 100'
@@ -92,7 +92,7 @@ router.get('/log', async (req, res) => {
 })
 
 // GET /api/librarian/stats
-router.get('/stats', async (req, res) => {
+router.get('/stats', requireAuth, async (req, res) => {
   try {
     const { rows } = await pool.query(`
       SELECT status, COUNT(*) AS count FROM desks GROUP BY status
@@ -107,7 +107,7 @@ router.get('/stats', async (req, res) => {
 })
 
 // GET /api/librarian/qr-sheet — print-ready QR code page for all desks
-router.get('/qr-sheet', async (req, res) => {
+router.get('/qr-sheet', requireAuth, async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT id, zone FROM desks ORDER BY id')
     const origin = `${req.protocol}://${req.get('host')}`
