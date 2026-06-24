@@ -10,7 +10,7 @@ DeskGuard is a full-stack web application designed to eliminate "ghost seats" an
 | 🗺️ **Live Map** | [deskguard-jade.vercel.app/live](https://deskguard-jade.vercel.app/live) |
 | 📷 **QR Scanner** | [deskguard-jade.vercel.app/scan](https://deskguard-jade.vercel.app/scan) |
 | 🛡️ **Librarian Dashboard** | [deskguard-jade.vercel.app/librarian](https://deskguard-jade.vercel.app/librarian) |
-| ⚙️ **Backend API** | [deskguard-api.onrender.com/api/health](https://deskguard-api.onrender.com/api/health) |
+| ⚙️ **Backend API** | [deskguard-api-2lgn.onrender.com/api/health](https://deskguard-api-2lgn.onrender.com/api/health) |
 
 > **Note:** The backend is hosted on Render's free tier and may take ~30 seconds to wake up on first request.
 >
@@ -148,7 +148,7 @@ DeskGuard provides a clean REST API for desk management and a real-time SSE stre
 
 ### Base URL
 - Development: `http://localhost:3001/api`
-- Production: `https://deskguard-api.onrender.com/api`
+- Production: `https://deskguard-api-2lgn.onrender.com/api`
 
 ### Desk Operations
 | Method | Endpoint | Description |
