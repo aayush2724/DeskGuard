@@ -6,13 +6,15 @@ DeskGuard is a full-stack web application designed to eliminate "ghost seats" an
 
 | Page | URL |
 |------|-----|
-| 🏠 **Marketing Site** | [deskguard.vercel.app](https://deskguard.vercel.app) |
-| 🗺️ **Live Map** | [deskguard.vercel.app/live](https://deskguard.vercel.app/live) |
-| 📷 **QR Scanner** | [deskguard.vercel.app/scan](https://deskguard.vercel.app/scan) |
-| 🛡️ **Librarian Dashboard** | [deskguard.vercel.app/librarian](https://deskguard.vercel.app/librarian) |
+| 🏠 **Marketing Site** | [deskguard-jade.vercel.app](https://deskguard-jade.vercel.app) |
+| 🗺️ **Live Map** | [deskguard-jade.vercel.app/live](https://deskguard-jade.vercel.app/live) |
+| 📷 **QR Scanner** | [deskguard-jade.vercel.app/scan](https://deskguard-jade.vercel.app/scan) |
+| 🛡️ **Librarian Dashboard** | [deskguard-jade.vercel.app/librarian](https://deskguard-jade.vercel.app/librarian) |
 | ⚙️ **Backend API** | [deskguard-api.onrender.com/api/health](https://deskguard-api.onrender.com/api/health) |
 
 > **Note:** The backend is hosted on Render's free tier and may take ~30 seconds to wake up on first request.
+>
+> **CORS:** Update the `ALLOWED_ORIGINS` env var on Render to `https://deskguard-jade.vercel.app` (or trigger a redeploy after the latest code push to activate the automatic vercel.app CORS allowlist).
 
 ---
 
