@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd client && npm install && npm run build && cp dist/index.html dist/app.html && cp -r marketing/* dist/ && cp marketing/index.html dist/index.html",
+  "buildCommand": "cd client && npm install && npm run build && cp dist/index.html dist/app.html && cp -r marketing/* dist/ && cp marketing/index.html dist/index.html && cp public/favicon.png dist/favicon.png",
   "outputDirectory": "client/dist",
   "installCommand": "npm install && cd client && npm install",
   "framework": null,

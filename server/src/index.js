@@ -24,12 +24,17 @@ app.use(helmet({
 }))
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:6111', 'http://localhost:3001']
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  : ['http://localhost:6111', 'http://localhost:3001', 'https://deskguard.vercel.app']
 
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true)
+    if (!origin) return cb(null, true)
+    // Allow exact matches or any *.vercel.app preview URL for this project
+    const isAllowed =
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/deskguard[\w-]*\.vercel\.app$/.test(origin)
+    if (isAllowed) return cb(null, true)
     cb(null, false)
   },
   credentials: true,

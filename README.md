@@ -2,7 +2,19 @@
 
 DeskGuard is a full-stack web application designed to eliminate "ghost seats" and hoarding in busy libraries. It combines a live, interactive desk map with QR-based check-ins and an automated background sweep system to ensure that seats are only occupied by active users.
 
-![DeskGuard Live Map Preview](https://via.placeholder.com/800x450?text=DeskGuard+Live+Map+Preview)
+## 🌐 Live Demo
+
+| Page | URL |
+|------|-----|
+| 🏠 **Marketing Site** | [deskguard.vercel.app](https://deskguard.vercel.app) |
+| 🗺️ **Live Map** | [deskguard.vercel.app/live](https://deskguard.vercel.app/live) |
+| 📷 **QR Scanner** | [deskguard.vercel.app/scan](https://deskguard.vercel.app/scan) |
+| 🛡️ **Librarian Dashboard** | [deskguard.vercel.app/librarian](https://deskguard.vercel.app/librarian) |
+| ⚙️ **Backend API** | [deskguard-api.onrender.com/api/health](https://deskguard-api.onrender.com/api/health) |
+
+> **Note:** The backend is hosted on Render's free tier and may take ~30 seconds to wake up on first request.
+
+---
 
 ## 🔴 The Problem: "Ghost Seats"
 
@@ -108,7 +120,7 @@ The system expects the following environment variables (defined in `server/.env`
 
 1.  **Clone & Install:**
     ```bash
-    git clone <repo-url>
+    git clone https://github.com/aayush2724/DeskGuard.git
     npm run install:all
     ```
 2.  **Environment:**
@@ -134,6 +146,7 @@ DeskGuard provides a clean REST API for desk management and a real-time SSE stre
 
 ### Base URL
 - Development: `http://localhost:3001/api`
+- Production: `https://deskguard-api.onrender.com/api`
 
 ### Desk Operations
 | Method | Endpoint | Description |
