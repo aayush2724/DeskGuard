@@ -12,9 +12,9 @@
     { "source": "/blog", "destination": "/changelog", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/live", "destination": "/app.html" },
-    { "source": "/scan", "destination": "/app.html" },
-    { "source": "/librarian", "destination": "/app.html" }
+    { "source": "/live", "destination": "/app" },
+    { "source": "/scan", "destination": "/app" },
+    { "source": "/librarian", "destination": "/app" }
   ],
   "headers": [
     {
@@ -33,7 +33,7 @@
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     },
     {
-      "source": "/app.html",
+      "source": "/app",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
     },
     {
