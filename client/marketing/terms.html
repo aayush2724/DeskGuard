@@ -2,125 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta name="description" content="DeskGuard's terms of service covering hardware, data, support, and account terms." />
-  <title>Terms of Service — DeskGuard</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terms of Use — DeskGuard</title>
+  <meta name="description" content="The terms that apply when you use the DeskGuard live map, QR check-in, and librarian dashboard during early access." />
+  <link rel="canonical" href="https://deskguard-jade.vercel.app/terms" />
+  <meta name="theme-color" content="#1A0819" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DeskGuard" />
+  <meta property="og:title" content="Terms of Use — DeskGuard" />
+  <meta property="og:description" content="The terms that apply when you use the DeskGuard live map, QR check-in, and librarian dashboard during early access." />
+  <meta property="og:url" content="https://deskguard-jade.vercel.app/terms" />
+  <meta property="og:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="DeskGuard — a live map of every desk in the library" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Terms of Use — DeskGuard" />
+  <meta name="twitter:description" content="The terms that apply when you use the DeskGuard live map, QR check-in, and librarian dashboard during early access." />
+  <meta name="twitter:image" content="https://deskguard-jade.vercel.app/og-image.png" />
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preload" href="/fonts/syne-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script src="/config.js"></script>
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <canvas id="webgl-canvas"></canvas>
-  <nav class="nav" id="nav">
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+  <nav class="nav" id="nav" aria-label="Main">
     <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-            <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9"/>
-            <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/>
-            <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/>
-            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.7"/>
-          </svg>
-        </span>
+      <a href="/" class="logo" aria-label="DeskGuard home">
+        <span class="logo-icon"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg></span>
         DeskGuard
       </a>
-      <div class="nav-links">
-        <a href="index.html#how">How it works</a>
-        <a href="index.html#bookshelf">Features</a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#bookshelf">Features</a>
         <a href="/live">Live Map</a>
         <a href="/scan">Scan QR</a>
         <a href="/librarian">Librarian</a>
-        <a href="contact.html" class="nav-cta">Get early access</a>
+        <a href="/contact" class="nav-cta">Get early access</a>
       </div>
-      <button class="nav-hamburger" aria-label="Menu">
+      <button class="nav-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
+  <main id="main">
   <section class="page-header">
     <span class="eyebrow" data-reveal>Legal</span>
-    <h1 data-reveal>Terms of Service</h1>
-    <p data-reveal>Last updated: June 2026</p>
+    <h1 data-reveal>Terms of Use</h1>
+    <p data-reveal>Last updated: 2 October 2026</p>
   </section>
 
   <article class="content-narrow" data-reveal>
-    <h2>1. Agreement</h2>
-    <p>These terms govern use of the DeskGuard platform, including sensor hardware, the dashboard, embeddable floor maps, and API. By signing up for or using DeskGuard, your institution agrees to these terms in addition to any signed order form or master services agreement.</p>
+    <!-- TODO(owner): have these terms reviewed by a qualified legal professional before launch. -->
+    <h2>1. What these terms cover</h2>
+    <p>These terms apply to the DeskGuard website, live desk map, QR check-in, and librarian dashboard (together, the "Service"). By using the Service you agree to them. If you use DeskGuard on behalf of a library or institution, that institution's own rules for its spaces also apply.</p>
 
-    <h2>2. The service</h2>
-    <p>DeskGuard provides hardware sensor units, installation services, and a software platform for real-time desk occupancy monitoring. Service levels, included hardware, and support response times vary by plan as described on our pricing page or your order form.</p>
+    <h2>2. Early access</h2>
+    <p>DeskGuard is in early access. Features may change, the Service may be unavailable at times (including while the API wakes from an idle state), and data shown on the map may occasionally be out of date. We don't offer a service-level agreement during early access.</p>
 
-    <h2>3. Hardware</h2>
-    <p>Sensor hardware provided under Starter and Campus plans remains the property of DeskGuard Ltd and is provided for the duration of your subscription. Enterprise on-prem arrangements may differ per contract. Customers are responsible for providing reasonable physical access for installation, maintenance, and removal.</p>
+    <h2>3. Using the live map and check-in</h2>
+    <ul>
+      <li>Only check in to a desk you are actually using, and release it when you leave.</li>
+      <li>Don't release, reset, or change the status of a desk someone else is using.</li>
+      <li>The <em>Away</em> hold and <em>Still here?</em> check exist to free abandoned desks fairly. Don't use them to hold a desk you've left.</li>
+      <li>A desk shown as free on the map is not a reservation. Physical presence and the library's own rules take precedence.</li>
+    </ul>
 
-    <h2>4. Data and privacy</h2>
-    <p>Use of the service is subject to our <a href="privacy.html">Privacy Policy</a>. Customers are responsible for informing building occupants that occupancy sensing is in use, in line with local requirements — DeskGuard provides signage templates to support this.</p>
+    <h2>4. Staff access</h2>
+    <p>The librarian dashboard is for authorised staff. Keep the access key confidential, sign out on shared devices, and tell the operator if you believe a key has been exposed.</p>
 
     <h2>5. Acceptable use</h2>
-    <p>The API, embed tokens, and dashboard may not be used to attempt to re-identify individuals, circumvent the anonymisation described in our Privacy Policy, or integrate with systems that combine DeskGuard data with personal identifiers without a separate data processing agreement.</p>
+    <p>You must not attempt to disrupt the Service, bypass rate limits or access controls, probe or overload the API, submit misleading or abusive content through the contact form, or use the Service for anything unlawful.</p>
 
-    <h2>6. Service levels and support</h2>
-    <p>Starter and Campus plans include standard email support with a target response time of one business day. Enterprise plans include custom SLAs as agreed in your contract.</p>
+    <h2>6. The Service is provided "as is"</h2>
+    <p>To the fullest extent permitted by law, the Service is provided without warranties of any kind, express or implied, including that it will be accurate, uninterrupted, or error-free. Desk status is an aid to finding a seat, not a guarantee.</p>
 
-    <h2>7. Termination</h2>
-    <p>Starter and Campus plans may be cancelled with 30 days' notice after the initial term. Upon termination, DeskGuard will arrange removal of sensor hardware within a reasonable period, and account data will be deleted in line with our data retention schedule.</p>
+    <h2>7. Limitation of liability</h2>
+    <p>To the fullest extent permitted by law, we are not liable for any indirect, incidental, or consequential loss arising from your use of, or inability to use, the Service. Nothing in these terms limits liability that cannot be limited by law.</p>
 
-    <h2>8. Liability</h2>
-    <p>DeskGuard provides occupancy information as an aid to space management and does not guarantee absolute accuracy. The 94% accuracy figure referenced in our materials reflects aggregate performance across deployments and is not a guarantee for any specific installation.</p>
+    <h2>8. Privacy</h2>
+    <p>Our <a href="/privacy">Privacy Policy</a> explains what the Service stores and why.</p>
 
-    <h2>9. Changes to these terms</h2>
-    <p>We may update these terms from time to time. Material changes will be communicated to account administrators at least 30 days before taking effect.</p>
+    <h2>9. Source code</h2>
+    <p>The DeskGuard source code is published at <a href="https://github.com/aayush2724/DeskGuard" rel="noopener">github.com/aayush2724/DeskGuard</a>. Use of the code is governed by the licence in that repository, not by these terms.</p>
+
+    <h2>10. Changes to these terms</h2>
+    <p>We may update these terms from time to time. The date at the top of this page shows when they last changed, and material changes will be noted in the <a href="/changelog">changelog</a>.</p>
+
+    <h2>11. Governing law</h2>
+    <p>These terms are governed by the laws of the jurisdiction in which the operator of this Service is established.</p>
+    <!-- TODO(owner): replace the sentence above with the specific governing law and venue once decided. -->
 
     <h2>Contact</h2>
-    <p>Questions about these terms can be sent to <a href="mailto:legal@deskguard.io">legal@deskguard.io</a>.</p>
+    <p>Questions about these terms: <span data-contact-email-or-form>use the <a href="/contact">contact form</a></span>.</p>
   </article>
+  </main>
+
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="logo">
-          <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.7"/></svg>
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg>
           DeskGuard
         </span>
         <p>A living map of the reading room.</p>
       </div>
-      <div class="footer-links">
+      <nav class="footer-links" aria-label="Footer">
         <div class="footer-col">
           <span class="footer-col-title">Product</span>
-          <a href="index.html#how">How it works</a>
-          <a href="index.html#bookshelf">Features</a>
-          <a href="changelog.html">Changelog</a>
+          <a href="/#how">How it works</a>
+          <a href="/#bookshelf">Features</a>
+          <a href="/live">Live map</a>
+          <a href="/changelog">Changelog</a>
         </div>
         <div class="footer-col">
-          <span class="footer-col-title">Company</span>
-          <a href="blog.html">Blog</a>
-          <a href="careers.html">Careers</a>
-          <a href="contact.html">Contact</a>
+          <span class="footer-col-title">Project</span>
+          <a href="https://github.com/aayush2724/DeskGuard" rel="noopener">Source on GitHub</a>
+          <a href="/contact">Contact</a>
         </div>
         <div class="footer-col">
           <span class="footer-col-title">Legal</span>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-          <a href="privacy.html#gdpr">GDPR</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms" aria-current="page">Terms</a>
         </div>
-      </div>
+      </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 DeskGuard Ltd. All rights reserved.</p>
+      <p>© <span data-year>2026</span> DeskGuard. All rights reserved.</p>
     </div>
   </footer>
 
-  <script src="shader.js"></script>
-  <script src="app.js"></script>
+  <script src="/shader.js" defer></script>
+  <script src="/app.js" defer></script>
 </body>
 </html>

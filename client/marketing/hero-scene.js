@@ -1,8 +1,8 @@
 /**
  * hero-scene.js — Flat grid library map preview for the marketing homepage
  * Matches the "Library Map · Floor 2" card UI from the design reference.
- * • Fetches /api/desks on load and colours desks by live status
- * • Subscribes to /api/events (SSE) for real-time updates
+ * • Fetches {apiBase}/desks on load and colours desks by live status
+ * • Subscribes to {apiBase}/events (SSE) for real-time updates while the tab is visible
  * • Animates random status transitions in demo/fallback mode
  * No Three.js required — pure DOM/CSS.
  */
@@ -12,13 +12,17 @@
   const container = document.getElementById('hero-3d');
   if (!container) return;
 
+  const CONFIG = window.DESKGUARD_CONFIG || {};
+  const API_BASE = (CONFIG.apiBase || '').replace(/\/$/, '') || '/api';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   /* ── Status config ───────────────────────────────────── */
   const STATUS = {
     free:               { color: '#F0C987', bg: '#3B153A', bar: '#F0C987', label: 'Free' },
     occupied:           { color: '#D95D7D', bg: '#2A0E29', bar: '#D95D7D', label: 'Occupied' },
     away:               { color: '#D4AF37', bg: '#3B153A', bar: '#D4AF37', label: 'Away' },
     still_here_pending: { color: '#D4AF37', bg: '#3B153A', bar: '#D4AF37', label: 'Away' },
-    abandoned:          { color: '#7A5C79', bg: '#1A0819', bar: '#7A5C79', label: 'Abandoned' },
+    abandoned:          { color: '#B59AB4', bg: '#1A0819', bar: '#7A5C79', label: 'Abandoned' },
   };
 
   /* ── Desk layout (mirrors seed.js exactly) ─────────── */
@@ -266,9 +270,11 @@
     const els = deskEls[id];
     if (!els) return;
 
-    // Quick flip animation
-    els.cell.style.animation = 'deskFlip 0.4s ease';
-    setTimeout(() => { els.cell.style.animation = ''; }, 400);
+    // Quick flip animation (skipped for reduced motion)
+    if (!reduceMotion) {
+      els.cell.style.animation = 'deskFlip 0.4s ease';
+      setTimeout(() => { els.cell.style.animation = ''; }, 400);
+    }
 
     els.cell.style.background = s.bg;
     els.label.style.color = s.color;
@@ -285,47 +291,66 @@
     });
   }
 
-  /* ── Live data: fetch + SSE ──────────────────────────── */
-  fetch('/api/desks')
-    .then(r => r.json())
-    .then(applyDesks)
-    .catch(() => {
-      // No API available — keep the seeded demo states visible
-    });
+  /* ── Live data: one fetch + SSE, demo animation as fallback ── */
+  let liveDataLoaded = false;
+  let es = null;
 
-  try {
-    const es = new EventSource('/api/events');
-    es.onmessage = (e) => {
-      try {
-        const msg = JSON.parse(e.data);
-        if (msg.type === 'desk_update' && deskEls[msg.desk.id]) {
-          deskState[msg.desk.id] = msg.desk.status;
-          applyDeskStatus(msg.desk.id, msg.desk.status);
-        }
-      } catch {}
-    };
-  } catch {}
+  function connectEvents() {
+    if (es || typeof EventSource === 'undefined') return;
+    try {
+      es = new EventSource(`${API_BASE}/events`);
+      es.onmessage = (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          if (msg.type === 'desk_update' && msg.desk && deskEls[msg.desk.id]) {
+            deskState[msg.desk.id] = msg.desk.status;
+            applyDeskStatus(msg.desk.id, msg.desk.status);
+          }
+        } catch { /* ignore malformed event */ }
+      };
+    } catch { es = null; }
+  }
+  function disconnectEvents() {
+    if (es) { es.close(); es = null; }
+  }
+
+  const controller = new AbortController();
+  const fetchTimeout = setTimeout(() => controller.abort(), 40000);
+  fetch(`${API_BASE}/desks`, { signal: controller.signal, headers: { Accept: 'application/json' } })
+    .then(r => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then(desks => {
+      if (!Array.isArray(desks)) return;
+      liveDataLoaded = true;
+      applyDesks(desks);
+      if (!document.hidden) connectEvents();
+    })
+    .catch(() => {
+      // No API reachable — keep the seeded demo states visible
+    })
+    .finally(() => clearTimeout(fetchTimeout));
+
+  // Don't hold an SSE connection open for a background tab
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) disconnectEvents();
+    else if (liveDataLoaded) connectEvents();
+  });
 
   /* ── Demo animation: cycle random desk states ─────────
-     Runs indefinitely to make the preview feel alive,
-     but only changes desks that aren't overridden by live data. */
-  let liveDataLoaded = false;
-  fetch('/api/desks').then(() => { liveDataLoaded = true; }).catch(() => {});
-
+     Only runs while no live data is available, and never
+     for visitors who prefer reduced motion. */
   const CYCLE_STATUSES = ['free', 'occupied', 'away', 'free', 'free', 'occupied'];
   const previewIds = Object.keys(deskEls);
 
   function cycleRandomDesk() {
-    if (liveDataLoaded) return; // don't animate over live data
+    if (liveDataLoaded || document.hidden) return;
     const id = previewIds[Math.floor(Math.random() * previewIds.length)];
     const next = CYCLE_STATUSES[Math.floor(Math.random() * CYCLE_STATUSES.length)];
     deskState[id] = next;
     applyDeskStatus(id, next);
   }
 
-  // Stagger initial demo animation start
-  setTimeout(() => {
-    setInterval(cycleRandomDesk, 1400);
-  }, 800);
+  if (!reduceMotion) {
+    setTimeout(() => { setInterval(cycleRandomDesk, 1400); }, 800);
+  }
 
 })();

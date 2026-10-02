@@ -12,9 +12,9 @@ DeskGuard is a full-stack web application designed to eliminate "ghost seats" an
 | 🛡️ **Librarian Dashboard** | [deskguard-jade.vercel.app/librarian](https://deskguard-jade.vercel.app/librarian) |
 | ⚙️ **Backend API** | [deskguard-api-2lgn.onrender.com/api/health](https://deskguard-api-2lgn.onrender.com/api/health) |
 
-> **Note:** The backend is hosted on Render's free tier and may take ~30 seconds to wake up on first request.
+> **Note:** The backend is hosted on Render's free tier and may take ~30 seconds to wake up on first request. The app shows a "server may be waking up" message while it waits.
 >
-> **CORS:** Update the `ALLOWED_ORIGINS` env var on Render to `https://deskguard-jade.vercel.app` (or trigger a redeploy after the latest code push to activate the automatic vercel.app CORS allowlist).
+> **CORS:** Set `ALLOWED_ORIGINS` on Render to `https://deskguard-jade.vercel.app`. Preview deployments are **not** allowed automatically any more; add them with `ALLOWED_ORIGIN_PATTERN` if you need them.
 
 ---
 
@@ -42,7 +42,7 @@ DeskGuard digitizes library occupancy management with a "Trust but Verify" appro
 DeskGuard is built as a distributed system with a focus on real-time synchronization and server-owned state.
 
 ### 1. Dual-Frontend Strategy
--   **Marketing Site (`/client/marketing`):** A high-performance, SEO-friendly site built with **Vanilla JS/CSS** and **Three.js** for the hero animation. It serves as the public face of the project.
+-   **Marketing Site (`/client/marketing`):** Static, crawlable HTML pages (home, contact, privacy, terms, changelog, 404) with vanilla JS, a WebGL shader background and GSAP animations. GSAP and fonts are self-hosted, so the site makes no third-party requests.
 -   **Interactive Application (`/client/src`):** A sophisticated **React** application that handles the live map (CSS Isometric transforms), the QR scanner, and the Librarian dashboard.
 
 ### 2. State-Machine Backend
@@ -97,9 +97,9 @@ The system expects the following environment variables (defined in `server/.env`
 ## 🛠 Tech Stack
 
 ### Frontend
-- **React (Vite)** + **CSS Modules**
-- **Three.js** (Hero Scene)
-- **HTML5-QRCode** (Scanner)
+- **React (Vite)** + **CSS Modules**, route-level code splitting
+- **GSAP** + a WebGL shader (marketing animations)
+- **HTML5-QRCode** (Scanner, loaded only on `/scan`)
 
 ### Backend
 - **Node.js (Express)**
@@ -128,15 +128,29 @@ The system expects the following environment variables (defined in `server/.env`
 2.  **Environment:**
     ```bash
     cp server/.env.example server/.env
+    # then set LIBRARIAN_API_KEY to a random 16+ character value, e.g.
+    node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
     ```
 3.  **Launch Infrastructure:**
     ```bash
     npm run db:up
     ```
-4.  **Start Development:**
+4.  **Seed the desks** (first run only — this replaces the desks table):
+    ```bash
+    cd server && node src/db/seed.js
+    ```
+5.  **Start Development:**
     ```bash
     npm run dev
     ```
+    Open http://localhost:6111 — Vite serves the marketing pages and the React app, and proxies `/api` to the server on :3001.
+
+### Checks
+
+```bash
+cd client && npm run lint && npm test && npm run build
+cd server && npm test   # unit tests; set TEST_DATABASE_URL + TEST_REDIS_URL (disposable!) to run the API integration tests — see server/test/api.test.js
+```
 
 ---
 
@@ -159,14 +173,30 @@ DeskGuard provides a clean REST API for desk management and a real-time SSE stre
 | `POST` | `/desks/:id/checkout` | Releases a desk and clears all timers. |
 | `POST` | `/desks/:id/stillhere`| Confirms presence after a "Still Here?" prompt. |
 
+Desk actions only succeed from valid states (for example you cannot check in to an occupied desk); invalid transitions return `409` with a readable message.
+
+### Contact
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/contact` | Stores an early-access enquiry (`name`, `email`, `institution`, `floors`, `message`). Rate-limited to 5 per 10 minutes per IP. |
+
 ### Librarian Dashboard
+All librarian endpoints require the `X-Api-Key` header (query-string keys are rejected). If `LIBRARIAN_API_KEY` is unset or weak, they return `503`.
+
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/librarian/stats` | Returns aggregate counts of desks by status. |
 | `GET` | `/librarian/log` | Returns the last 100 entries from the activity log. |
 | `POST` | `/librarian/reset/:id`| Manually releases a specific desk. |
 | `POST` | `/librarian/reset-all` | Reclaims all desks currently in `abandoned` state. |
-| `GET` | `/librarian/qr-sheet` | Returns a print-ready HTML page of QR codes for all desks. |
+| `GET` | `/librarian/qr-sheet` | Returns a print-ready HTML page of QR codes for all desks (codes link to `PUBLIC_SITE_URL`). |
+| `GET` | `/librarian/contact-requests` | Lists website enquiries (newest 200). |
+| `DELETE` | `/librarian/contact-requests/:id` | Deletes an enquiry (use for data-deletion requests). |
+
+Reading enquiries:
+```bash
+curl -H "X-Api-Key: $LIBRARIAN_API_KEY" https://deskguard-api-2lgn.onrender.com/api/librarian/contact-requests
+```
 
 ---
 
@@ -193,6 +223,35 @@ DeskGuard uses **Server-Sent Events (SSE)** instead of WebSockets for unidirecti
 1.  **Check-in:** User scans QR → PostgreSQL sets status to `occupied` → Redis sets `checkin` key (2h).
 2.  **Session Expiry:** Redis `checkin` key expires → **Sweep Job** detects missing key → Sets PostgreSQL status to `still_here_pending` → SSE pushes modal to client → Redis sets `grace` key (30s).
 3.  **Failure to Respond:** Redis `grace` key expires → **Sweep Job** reclaims desk → Sets status to `free` → SSE updates all maps.
+
+---
+
+## 🚀 Deployment configuration
+
+### Vercel (website + app) — `vercel.json`
+Build: `cd client && npm run build`. The build assembles `client/dist` (marketing pages, the React app as `app.html`, self-hosted GSAP, and a generated `config.js`). `vercel.json` also sets clean URLs, the SPA rewrites, and security headers (CSP, HSTS, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`).
+
+| Variable | Required | Example | Purpose |
+| --- | --- | --- | --- |
+| `VITE_API_URL` | yes | `https://deskguard-api-2lgn.onrender.com/api` | API base URL (public) |
+| `VITE_SITE_URL` | no | `https://deskguard-jade.vercel.app` | Canonical/OG URLs in the app |
+| `DESKGUARD_CONTACT_EMAIL` | recommended | `hello@your-domain` | Shown on contact/privacy pages; leave unset until a monitored mailbox exists |
+| `VITE_VENUE_NAME` / `VITE_VENUE_SUBTITLE` | recommended | `Main Library` / `Floor 2` | Names shown on the map |
+| `VITE_AWAY_MINUTES` / `VITE_SESSION_HOURS` | no | `20` / `2` | Must match the server's TTLs |
+
+If the API moves to a different host, update `connect-src` in the CSP inside `vercel.json`, and the canonical URLs in `client/marketing/*.html`, `client/public/sitemap.xml` and `client/public/robots.txt` if the site domain changes.
+
+### Render (API)
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `DATABASE_URL`, `REDIS_URL` | yes | Managed Postgres / Redis |
+| `LIBRARIAN_API_KEY` | yes | 16+ random characters |
+| `ALLOWED_ORIGINS` | yes | `https://deskguard-jade.vercel.app` |
+| `PUBLIC_SITE_URL` | yes | `https://deskguard-jade.vercel.app` — printed QR codes link here |
+| `NODE_ENV` | yes | `production` |
+| `ALLOWED_ORIGIN_PATTERN`, `ACTIVITY_LOG_RETENTION_DAYS`, `TRUST_PROXY`, `AWAY_TTL_SECONDS`, `CHECKIN_TTL_SECONDS` | no | see `server/.env.example` |
+
+Health check path: `/api/health` (returns `503` if Postgres or Redis is down).
 
 ---
 

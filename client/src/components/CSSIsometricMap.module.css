@@ -67,6 +67,9 @@
 .desk {
   position: absolute;
   width: 90px; height: 90px;
+  /* rendered as a <button>: reset native button chrome */
+  background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit;
+  display: block; appearance: none; -webkit-appearance: none;
   transform-style: preserve-3d;
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(.4,0,.2,1);
@@ -75,6 +78,15 @@
   transform: translateZ(8px) scale(1.04);
   z-index: 10;
 }
+.desk:focus { outline: none; }
+.desk:focus-visible {
+  transform: translateZ(12px) scale(1.06);
+  z-index: 20;
+  outline: 3px solid #FDF5E6;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+.desk:focus-visible .deskLabel { opacity: 1; }
 .desk.selected {
   transform: translateZ(12px) scale(1.06);
   z-index: 20;
@@ -203,9 +215,17 @@
 /* ══════════════════════════════════════════════════════
    UI Overlays
    ══════════════════════════════════════════════════════ */
-.resetBtn {
+.controls {
   position: absolute;
   top: 16px; right: 16px;
+  display: flex; gap: 8px;
+  z-index: 50;
+}
+.ctrlBtn {
+  min-width: 40px; min-height: 40px;
+  font-size: 18px !important;
+}
+.resetBtn, .ctrlBtn {
   background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(207, 201, 177, 0.25);
@@ -216,9 +236,9 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  z-index: 50;
 }
-.resetBtn:hover {
+.resetBtn { font-size: 12px !important; }
+.resetBtn:hover, .ctrlBtn:hover {
   background: rgba(207, 201, 177, 0.15);
   border-color: #F0C987;
   box-shadow: 0 4px 24px rgba(207,201,177,0.25);
@@ -236,6 +256,15 @@
   border-radius: 10px;
   z-index: 50;
   box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  flex-wrap: wrap; justify-content: center;
+  max-width: calc(100% - 32px);
+}
+.container:focus { outline: none; }
+.container:focus-visible { outline: 2px solid #F0C987; outline-offset: -4px; }
+@media (max-width: 600px) {
+  .controls { top: 10px; right: 10px; gap: 6px; }
+  .resetBtn, .ctrlBtn { padding: 8px 12px; }
+  .legend { gap: 12px; padding: 8px 12px; bottom: 10px; }
 }
 .legendItem {
   display: flex; align-items: center; gap: 6px;

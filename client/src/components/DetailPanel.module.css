@@ -1,7 +1,7 @@
 /* ── Detail Panel — Dark tech themed sidebar ─────────────── */
 .panel {
   position: relative;
-  background: rgba(8, 15, 11, 0.85);
+  background: rgba(26, 8, 25, 0.92);
   backdrop-filter: blur(20px);
   border-left: 1px solid var(--border);
   padding: 24px 22px;
@@ -21,7 +21,7 @@
   justify-content: space-between;
   align-items: center;
 }
-.topNav h3 {
+.topNav h2 {
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
@@ -32,8 +32,8 @@
   background: rgba(10, 10, 10, 0.75);
   border: 1px solid var(--border);
   color: var(--text-2);
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
@@ -74,12 +74,12 @@
   letter-spacing: 0.02em;
   padding: 5px 14px;
   border-radius: 99px;
-  color: #ffffff;
   width: fit-content;
 }
 
 /* Metadata rows */
 .meta {
+  margin: 0;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--border);
@@ -92,11 +92,12 @@
   border-bottom: 1px solid var(--border);
   font-size: 13px;
 }
-.row > span:first-child {
+.row > dt {
   color: var(--text-2);
   font-size: 13px;
 }
-.row > span:last-child {
+.row > dd {
+  margin: 0;
   color: var(--text);
   font-weight: 600;
   text-align: right;
@@ -105,10 +106,9 @@
 /* Info text for occupied desks */
 .infoText {
   font-size: 13px;
-  color: var(--text);
-  font-style: italic;
-  padding: 8px 0;
-  border-top: 1px solid var(--border);
+  color: var(--text-2);
+  line-height: 1.6;
+  margin: 0;
 }
 
 /* QR Section */
@@ -152,7 +152,7 @@
   border-radius: 8px;
   padding: 12px 14px;
   font-size: 12px;
-  color: #FBBF24;
+  color: #E8C766;
   text-align: center;
   line-height: 1.6;
 }
@@ -167,7 +167,7 @@
   gap: 10px;
   align-items: flex-start;
   font-size: 13px;
-  color: #F87171;
+  color: #FFB3B3;
   line-height: 1.5;
 }
 
@@ -180,3 +180,7 @@
   padding-top: 12px;
   border-top: 1px solid var(--border);
 }
+
+.panel:focus { outline: none; }
+.panel:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+.busy { font-family: var(--mono); font-size: 12px; color: var(--text-2); margin: 0; }

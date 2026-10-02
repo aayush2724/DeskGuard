@@ -1,9 +1,9 @@
 {
   "name": "deskguard-full-site",
   "version": "1.0.0",
-  "description": "DeskGuard — Library Seat Booking & Anti-Hoarding App",
+  "description": "DeskGuard \u2014 live library desk map with QR check-in",
   "scripts": {
-    "start": "npm run db:up && cd client && npm run build && cd ../server && node src/index.js",
+    "start": "cd client && npm run build && cd ../server && NODE_ENV=production node src/index.js",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "server:install": "cd server && npm install",
@@ -12,7 +12,9 @@
     "server:dev": "cd server && npm run dev",
     "client:dev": "cd client && npm run dev",
     "dev": "npm run db:up && concurrently -n SERVER,CLIENT -c green,cyan \"npm run server:dev\" \"npm run client:dev\"",
-    "dev:fast": "npm run db:up && npm run server:dev"
+    "lint": "cd client && npm run lint",
+    "test": "cd client && npm test && cd ../server && npm test",
+    "build": "cd client && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

@@ -2,35 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta name="description" content="DeskGuard turns any library, study hall, or coworking floor into a real-time 3D digital twin. Find a free seat in seconds. Reclaim abandoned ones in minutes." />
-  <title>DeskGuard — A living map of the reading room</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DeskGuard — Live library desk map with QR check-in</title>
+  <meta name="description" content="DeskGuard gives libraries and study halls a live map of every desk. Students check in by scanning a QR code; abandoned desks are flagged and freed automatically. No cameras, no sensors, no app to install." />
+  <link rel="canonical" href="https://deskguard-jade.vercel.app/" />
+  <meta name="theme-color" content="#1A0819" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DeskGuard" />
+  <meta property="og:title" content="DeskGuard — Live library desk map with QR check-in" />
+  <meta property="og:description" content="A live map of every desk in the library. Scan a QR code to check in; abandoned desks are flagged and freed automatically." />
+  <meta property="og:url" content="https://deskguard-jade.vercel.app/" />
+  <meta property="og:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="DeskGuard — a live map of every desk in the library" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DeskGuard — Live library desk map with QR check-in" />
+  <meta name="twitter:description" content="A live map of every desk in the library. Scan a QR code to check in; abandoned desks are flagged and freed automatically." />
+  <meta name="twitter:image" content="https://deskguard-jade.vercel.app/og-image.png" />
 
-  <!-- Tech stack CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preload" href="/fonts/syne-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script src="/config.js"></script>
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- WebGL canvas — fullscreen shader background -->
-  <canvas id="webgl-canvas"></canvas>
+  <!-- WebGL canvas — fullscreen shader background (decorative) -->
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 
   <!-- NAV -->
-  <nav class="nav" id="nav">
+  <nav class="nav" id="nav" aria-label="Main">
     <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+      <a href="/" class="logo" aria-label="DeskGuard home">
+        <span class="logo-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none" focusable="false">
             <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/>
             <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/>
             <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/>
@@ -39,279 +56,273 @@
         </span>
         DeskGuard
       </a>
-      <div class="nav-links">
-        <a href="index.html#how">How it works</a>
-        <a href="index.html#bookshelf">Features</a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#bookshelf">Features</a>
         <a href="/live">Live Map</a>
         <a href="/scan">Scan QR</a>
         <a href="/librarian">Librarian</a>
-        <a href="contact.html" class="nav-cta">Get early access</a>
+        <a href="/contact" class="nav-cta">Get early access</a>
       </div>
-      <button class="nav-hamburger" aria-label="Menu">
+      <button class="nav-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
+  <main id="main">
   <!-- HERO -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" aria-labelledby="hero-title">
     <div class="hero-content">
       <div class="hero-badge" data-reveal>
-        <span class="pulse-dot"></span>
-        <span>Live occupancy · Updated every 30s</span>
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <span>Live occupancy · updated in real time</span>
       </div>
-      <h1 class="hero-headline">
+      <h1 class="hero-headline" id="hero-title">
         <span class="line-wrap"><span class="line">A living map</span></span>
         <span class="line-wrap"><span class="line accent-line">of the reading</span></span>
         <span class="line-wrap"><span class="line">room.</span></span>
       </h1>
-      <p class="hero-sub" data-reveal>DeskGuard turns any library, study hall, or coworking floor into a real-time 3D digital twin. Find a free seat in seconds. Reclaim abandoned ones in minutes.</p>
+      <p class="hero-sub" data-reveal>DeskGuard gives any library, study hall, or reading room a live map of every desk. Find a free seat in seconds. Hand abandoned ones back automatically.</p>
       <div class="hero-actions" data-reveal>
-        <a href="contact.html" class="btn-primary">
+        <a href="/contact" class="btn-primary">
           <span>Get early access</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="/live" class="btn-ghost"><span class="pulse-dot small" style="margin-right:4px"></span>See it live</a>
+        <a href="/live" class="btn-ghost"><span class="pulse-dot small" aria-hidden="true"></span>See it live</a>
       </div>
-      <div class="hero-stats" data-reveal>
+      <dl class="hero-stats" data-reveal>
         <div class="stat">
-          <span class="stat-num" data-count="12">0</span><span class="stat-unit">s</span>
-          <span class="stat-label">avg. time to find a seat</span>
+          <dt class="stat-label">cameras or sensors</dt>
+          <dd><span class="stat-num" data-count="0">0</span></dd>
         </div>
-        <div class="stat-divider"></div>
+        <div class="stat-divider" aria-hidden="true"></div>
         <div class="stat">
-          <span class="stat-num" data-count="94">0</span><span class="stat-unit">%</span>
-          <span class="stat-label">occupancy accuracy</span>
+          <dt class="stat-label">apps to install</dt>
+          <dd><span class="stat-num" data-count="0">0</span></dd>
         </div>
-        <div class="stat-divider"></div>
+        <div class="stat-divider" aria-hidden="true"></div>
         <div class="stat">
-          <span class="stat-num" data-count="0">—</span>
-          <span class="stat-label">cameras needed</span>
+          <dt class="stat-label">away hold before a desk is reclaimed</dt>
+          <dd><span class="stat-num" data-count="20">0</span><span class="stat-unit"> min</span></dd>
         </div>
-      </div>
+      </dl>
     </div>
 
     <!-- Live flat grid floor preview -->
     <div class="floor-preview" data-reveal>
-      <div id="hero-3d"></div>
+      <div id="hero-3d" role="img" aria-label="Preview of the live desk map: a grid of desks coloured by status"></div>
     </div>
 
     <!-- Scroll hint -->
-    <div class="scroll-hint">
+    <div class="scroll-hint" aria-hidden="true">
       <span>scroll</span>
       <div class="scroll-line"></div>
     </div>
   </section>
 
-
-
   <!-- HOW IT WORKS — Horizontal scroll timeline -->
-  <section class="how" id="how">
+  <section class="how" id="how" aria-labelledby="how-title">
     <div class="how-pin-container">
       <div class="how-header">
         <span class="eyebrow" data-reveal>How it works</span>
-        <h2 data-reveal>From walk-in to seated<br/>in seconds.</h2>
+        <h2 data-reveal id="how-title">From walk-in to seated<br/>in seconds.</h2>
       </div>
       <div class="how-scroll-outer" id="howScrollOuter">
-        <div class="how-track">
+        <div class="how-track" aria-hidden="true">
           <div class="how-track-line"></div>
           <div class="how-track-progress" id="howTrackProgress"></div>
           <div class="how-avatar" id="howAvatar">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" focusable="false">
               <circle cx="20" cy="12" r="7" fill="#F0C987"/>
               <path d="M10 38c0-6 4-12 10-12s10 6 10 12" fill="#F0C987" opacity="0.7"/>
               <circle cx="18" cy="11" r="1.2" fill="#1A0819"/>
               <circle cx="22" cy="11" r="1.2" fill="#1A0819"/>
               <path d="M17.5 14.5q2.5 2 5 0" stroke="#1A0819" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-
             </svg>
           </div>
-
         </div>
-        <div class="how-cards" id="howCards">
-          <div class="how-card active" data-step="0">
-            <div class="how-card-num">01</div>
-            <div class="how-card-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M18 10v8l5 5" stroke="#F0C987" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <ol class="how-cards" id="howCards" tabindex="0" aria-label="How it works, five steps">
+          <li class="how-card active" data-step="0">
+            <div class="how-card-num" aria-hidden="true">01</div>
+            <div class="how-card-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" focusable="false"><circle cx="18" cy="18" r="14" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M18 10v8l5 5" stroke="#F0C987" stroke-width="2" stroke-linecap="round"/></svg></div>
             <h3>Walk In</h3>
-            <p>Student enters the library. No app download, no check-in kiosk — just walk in normally.</p>
-          </div>
-          <div class="how-card" data-step="1">
-            <div class="how-card-num">02</div>
-            <div class="how-card-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M12 18h12M18 12v12" stroke="#F0C987" stroke-width="2" stroke-linecap="round"/></svg></div>
-            <h3>Auto-Sense</h3>
-            <p>BLE + WiFi probes passively detect the student's device. No pairing needed — it just works.</p>
-          </div>
-          <div class="how-card" data-step="2">
-            <div class="how-card-num">03</div>
-            <div class="how-card-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="8" y="10" width="20" height="16" rx="3" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M13 18h10M13 22h6" stroke="#F0C987" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <p>Check the live map on your phone before you reach the floor. No app download, no account — free desks are already marked.</p>
+          </li>
+          <li class="how-card" data-step="1">
+            <div class="how-card-num" aria-hidden="true">02</div>
+            <div class="how-card-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" focusable="false"><rect x="9" y="9" width="7" height="7" rx="1.5" stroke="#F0C987" stroke-width="2"/><rect x="20" y="9" width="7" height="7" rx="1.5" stroke="#F0C987" stroke-width="2"/><rect x="9" y="20" width="7" height="7" rx="1.5" stroke="#F0C987" stroke-width="2"/><path d="M20 20h3v3M27 20v7h-7v-3" stroke="#F0C987" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <h3>Scan the QR</h3>
+            <p>Every desk has a QR sticker. Scan it with your phone camera to check in — that's the whole process.</p>
+          </li>
+          <li class="how-card" data-step="2">
+            <div class="how-card-num" aria-hidden="true">03</div>
+            <div class="how-card-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" focusable="false"><rect x="8" y="10" width="20" height="16" rx="3" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M13 18h10M13 22h6" stroke="#F0C987" stroke-width="2" stroke-linecap="round"/></svg></div>
             <h3>Map Updates</h3>
-            <p>The live 3D floor plan marks the seat as occupied in under 30 seconds. Everyone can see it.</p>
-          </div>
-          <div class="how-card" data-step="3">
-            <div class="how-card-num">04</div>
-            <div class="how-card-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#fbbf24" stroke-width="1.5" opacity="0.3"/><path d="M18 12v6l4 2" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/></svg></div>
-            <h3>Away Detection</h3>
-            <p>Student leaves for coffee? DeskGuard detects the absence and starts the ghost-seat timer.</p>
-          </div>
-          <div class="how-card" data-step="4">
-            <div class="how-card-num">05</div>
-            <div class="how-card-icon"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M12 18l4 4 8-8" stroke="#F0C987" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <p>The live floor plan marks the desk as occupied the moment you check in, for everyone who has the map open.</p>
+          </li>
+          <li class="how-card" data-step="3">
+            <div class="how-card-num" aria-hidden="true">04</div>
+            <div class="how-card-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" focusable="false"><circle cx="18" cy="18" r="14" stroke="#fbbf24" stroke-width="1.5" opacity="0.3"/><path d="M18 12v6l4 2" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <h3>Going Away?</h3>
+            <p>Stepping out for coffee? Tap <em>Away</em>. The desk is held for 20 minutes and flagged as abandoned if you don't come back.</p>
+          </li>
+          <li class="how-card" data-step="4">
+            <div class="how-card-num" aria-hidden="true">05</div>
+            <div class="how-card-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" focusable="false"><circle cx="18" cy="18" r="14" stroke="#F0C987" stroke-width="1.5" opacity="0.3"/><path d="M12 18l4 4 8-8" stroke="#F0C987" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <h3>Seat Freed</h3>
-            <p>After the timeout, the desk turns green again — ready for the next student. No staff effort.</p>
-          </div>
-        </div>
+            <p>Abandoned desks are flagged for staff and can be claimed by the next student. After two hours a quick "Still here?" check keeps long sessions honest.</p>
+          </li>
+        </ol>
       </div>
     </div>
   </section>
 
-
-
-
-
   <!-- BOOKSHELF -->
-  <section class="bookshelf-section" id="bookshelf">
+  <section class="bookshelf-section" id="bookshelf" aria-labelledby="features-title">
     <div class="container">
       <div class="section-header">
         <span class="eyebrow" data-reveal>Explore</span>
-        <h2 data-reveal>The Complete Setup</h2>
-        <p data-reveal>Hover over the modules to see what powers DeskGuard.</p>
+        <h2 data-reveal id="features-title">The Complete Setup</h2>
+        <p data-reveal>Hover over or focus the modules to see what powers DeskGuard.</p>
       </div>
-      
+
       <div class="bookshelf-container" data-reveal>
-        <div class="bookshelf-shelf"></div>
-        <div class="bookshelf-books">
-          
-          <!-- Book 1 -->
-          <div class="book book-purple" tabindex="0">
-            <div class="book-spine">
-              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg></span>
-              <span class="book-title">LIVE 3D MAP</span>
+        <div class="bookshelf-shelf" aria-hidden="true"></div>
+        <ul class="bookshelf-books">
+
+          <li class="book book-purple" tabindex="0" aria-labelledby="book1-title" aria-describedby="book1-desc">
+            <div class="book-spine" aria-hidden="true">
+              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg></span>
+              <span class="book-title">LIVE MAP</span>
             </div>
             <div class="book-info">
-              <h4>Live 3D Map</h4>
-              <p>A real-time digital twin of your space, updating every 30 seconds. Fully embeddable.</p>
+              <h4 id="book1-title">Live Map</h4>
+              <p id="book1-desc">A real-time floor plan of every desk, pushed to every open browser the moment a status changes.</p>
             </div>
-          </div>
+          </li>
 
-          <!-- Book 2 -->
-          <div class="book book-blue" tabindex="0">
-            <div class="book-spine">
-              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+          <li class="book book-blue" tabindex="0" aria-labelledby="book2-title" aria-describedby="book2-desc">
+            <div class="book-spine" aria-hidden="true">
+              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
               <span class="book-title">GHOST SEAT DETECTION</span>
             </div>
             <div class="book-info">
-              <h4>Ghost Seat Detection</h4>
-              <p>Distinguish between people and bags. Our model alerts you when a seat is abandoned.</p>
+              <h4 id="book2-title">Ghost Seat Detection</h4>
+              <p id="book2-desc">Away timers and "Still here?" checks flag desks that were left behind — no sensors, no cameras, just time.</p>
             </div>
-          </div>
+          </li>
 
-          <!-- Book 3 -->
-          <div class="book book-amber" tabindex="0">
-            <div class="book-spine">
-              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"></circle><polyline points="12 9 12 13 14 15"></polyline><line x1="12" y1="2" x2="12" y2="4"></line></svg></span>
+          <li class="book book-amber" tabindex="0" aria-labelledby="book3-title" aria-describedby="book3-desc">
+            <div class="book-spine" aria-hidden="true">
+              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="13" r="8"></circle><polyline points="12 9 12 13 14 15"></polyline><line x1="12" y1="2" x2="12" y2="4"></line></svg></span>
               <span class="book-title">ANTI-HOARDING TIMER</span>
             </div>
             <div class="book-info">
-              <h4>Anti-Hoarding Timer</h4>
-              <p>Automatically mark desks as available if left unattended beyond your library's policy.</p>
+              <h4 id="book3-title">Anti-Hoarding Timer</h4>
+              <p id="book3-desc">Desks on Away are held for a set time (20 minutes by default) and marked abandoned if nobody returns.</p>
             </div>
-          </div>
+          </li>
 
-          <!-- Book 4 -->
-          <div class="book book-red" tabindex="0">
-            <div class="book-spine">
-              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg></span>
+          <li class="book book-red" tabindex="0" aria-labelledby="book4-title" aria-describedby="book4-desc">
+            <div class="book-spine" aria-hidden="true">
+              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg></span>
               <span class="book-title">LIBRARIAN DASHBOARD</span>
             </div>
             <div class="book-info">
-              <h4>Librarian Dashboard</h4>
-              <p>A central control panel for staff to monitor zones, reset desks, and view the system log.</p>
+              <h4 id="book4-title">Librarian Dashboard</h4>
+              <p id="book4-desc">A key-protected control panel for staff to monitor zones, reset desks, print QR sheets, and read the activity log.</p>
             </div>
-          </div>
+          </li>
 
-          <!-- Book 5 -->
-          <div class="book book-orange" tabindex="0">
-            <div class="book-spine">
-              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span>
-              <span class="book-title">UTILISATION ANALYTICS</span>
+          <li class="book book-orange" tabindex="0" aria-labelledby="book5-title" aria-describedby="book5-desc">
+            <div class="book-spine" aria-hidden="true">
+              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M4 6h16M4 12h16M4 18h10"></path></svg></span>
+              <span class="book-title">ACTIVITY LOG</span>
             </div>
             <div class="book-info">
-              <h4>Utilisation Analytics</h4>
-              <p>Exportable time-series data for peak hours, space usage, and historical trends.</p>
+              <h4 id="book5-title">Activity Log</h4>
+              <p id="book5-desc">Every check-in, away, release, and reset is recorded with a timestamp so staff can review what happened.</p>
             </div>
-          </div>
+          </li>
 
-          <!-- Book 6 -->
-          <div class="book book-green" tabindex="0">
-            <div class="book-spine">
-              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+          <li class="book book-green" tabindex="0" aria-labelledby="book6-title" aria-describedby="book6-desc">
+            <div class="book-spine" aria-hidden="true">
+              <span class="book-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
               <span class="book-title">PRIVACY-FIRST</span>
             </div>
             <div class="book-info">
-              <h4>Privacy-First</h4>
-              <p>100% passive sensing. No cameras, no personal tracking, and full GDPR compliance.</p>
+              <h4 id="book6-title">Privacy-First</h4>
+              <p id="book6-desc">No cameras, no sensors, no student accounts. DeskGuard stores desk IDs and timestamps — not people.</p>
             </div>
-          </div>
-          
-        </div>
+          </li>
+
+        </ul>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="cta-section">
+  <section class="cta-section" aria-labelledby="cta-title">
     <div class="container">
       <div class="cta-box">
         <span class="eyebrow" data-reveal>Early access</span>
-        <h2 data-reveal>Ready to see your<br/>library move?</h2>
-        <p data-reveal>Join 40+ institutions in the early access programme. We'll have your first floor live within a week.</p>
-        <div class="cta-form" data-reveal>
-          <input type="email" placeholder="your@university.edu" class="cta-input" />
-          <button class="btn-primary">Request access</button>
-        </div>
-        <p class="cta-note" data-reveal>No credit card. No cameras. No nonsense.</p>
+        <h2 data-reveal id="cta-title">Ready to see your<br/>library move?</h2>
+        <p data-reveal>DeskGuard is in early access. Tell us about your space and we'll get back to you.</p>
+        <form class="cta-form" data-reveal action="/contact" method="get">
+          <label for="cta-email" class="visually-hidden">Your email address</label>
+          <input type="email" id="cta-email" name="email" placeholder="you@university.edu" class="cta-input" autocomplete="email" inputmode="email" required />
+          <button type="submit" class="btn-primary">Request access</button>
+        </form>
+        <p class="cta-note" data-reveal>No cameras. No sensors. No app to install.</p>
       </div>
     </div>
   </section>
+  </main>
+
+  <!-- Sticky mobile CTA (shown on small screens once the hero scrolls away) -->
+  <div class="mobile-cta" id="mobileCta" hidden>
+    <a href="/live" class="btn-ghost">See it live</a>
+    <a href="/contact" class="btn-primary">Get early access</a>
+  </div>
 
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="logo">
-          <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg>
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg>
           DeskGuard
         </span>
         <p>A living map of the reading room.</p>
       </div>
-      <div class="footer-links">
+      <nav class="footer-links" aria-label="Footer">
         <div class="footer-col">
           <span class="footer-col-title">Product</span>
-          <a href="#how">How it works</a>
-          <a href="#bookshelf">Features</a>
-          <a href="changelog.html">Changelog</a>
+          <a href="/#how">How it works</a>
+          <a href="/#bookshelf">Features</a>
+          <a href="/live">Live map</a>
+          <a href="/changelog">Changelog</a>
         </div>
         <div class="footer-col">
-          <span class="footer-col-title">Company</span>
-          <a href="blog.html">Blog</a>
-          <a href="careers.html">Careers</a>
-          <a href="contact.html">Contact</a>
+          <span class="footer-col-title">Project</span>
+          <a href="https://github.com/aayush2724/DeskGuard" rel="noopener">Source on GitHub</a>
+          <a href="/contact">Contact</a>
         </div>
         <div class="footer-col">
           <span class="footer-col-title">Legal</span>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-          <a href="privacy.html#gdpr">GDPR</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
         </div>
-      </div>
+      </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 DeskGuard Ltd. All rights reserved.</p>
+      <p>© <span data-year>2026</span> DeskGuard. All rights reserved.</p>
     </div>
   </footer>
 
-  <script src="shader.js"></script>
-  <script src="app.js"></script>
-  <script src="hero-scene.js"></script>
+  <script src="/shader.js" defer></script>
+  <script src="/app.js" defer></script>
+  <script src="/hero-scene.js" defer></script>
 </body>
 </html>

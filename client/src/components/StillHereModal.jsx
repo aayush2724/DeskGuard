@@ -1,42 +1,78 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useId } from 'react'
 import styles from './StillHereModal.module.css'
+import { GRACE_SECONDS, SESSION_HOURS } from '../config.js'
 
-const GRACE = 30 // seconds to respond
+/**
+ * StillHereModal — asks the person who checked in to confirm they are still at
+ * the desk. The server owns the real timer; when the countdown here reaches zero
+ * we simply close the dialog (onTimeout) and let the server decide.
+ */
+export default function StillHereModal({ deskId, onConfirm, onAbandon, onTimeout, busy = false }) {
+  const [secs, setSecs] = useState(GRACE_SECONDS)
+  const titleId = useId()
+  const descId = useId()
+  const dialogRef = useRef(null)
+  const confirmRef = useRef(null)
+  const previouslyFocused = useRef(null)
 
-export default function StillHereModal({ deskId, onConfirm, onAbandon }) {
-  const [secs, setSecs] = useState(GRACE)
-
+  // Countdown
   useEffect(() => {
-    setSecs(GRACE)
-    const interval = setInterval(() => {
-      setSecs(prev => {
-        if (prev <= 1) { clearInterval(interval); onAbandon(); return 0 }
-        return prev - 1
-      })
-    }, 1000)
+    setSecs(GRACE_SECONDS)
+    const interval = setInterval(() => setSecs(prev => (prev > 0 ? prev - 1 : 0)), 1000)
     return () => clearInterval(interval)
   }, [deskId])
+  useEffect(() => { if (secs === 0) onTimeout?.() }, [secs, onTimeout])
 
-  const pct = (secs / GRACE) * 100
+  // Focus management: move focus in on open, restore on close, trap Tab inside
+  useEffect(() => {
+    previouslyFocused.current = document.activeElement
+    confirmRef.current?.focus()
+    const onKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); onTimeout?.(); return }
+      if (e.key !== 'Tab' || !dialogRef.current) return
+      const focusable = dialogRef.current.querySelectorAll('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')
+      if (!focusable.length) return
+      const first = focusable[0], last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      previouslyFocused.current?.focus?.()
+    }
+  }, [onTimeout])
+
+  const pct = (secs / GRACE_SECONDS) * 100
+  const barColor = pct > 40 ? '#F0C987' : pct > 15 ? '#D4AF37' : '#D95D7D'
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <div className={styles.icon}>⏰</div>
-        <h2 className={styles.title}>Still here?</h2>
-        <p className={styles.sub}>
-          Desk <strong>{deskId}</strong> has been occupied for 2 hours.<br />
-          Confirm you're still using it or it'll be freed.
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descId}
+        ref={dialogRef}
+      >
+        <div className={styles.icon} aria-hidden="true">⏰</div>
+        <h2 className={styles.title} id={titleId}>Still here?</h2>
+        <p className={styles.sub} id={descId}>
+          Desk <strong>{deskId}</strong> has been checked in for {SESSION_HOURS} hours.<br />
+          Confirm you're still using it, or it will be marked abandoned.
         </p>
         <div className={styles.timerWrap}>
-          <div className={styles.timerBar}>
-            <div className={styles.timerFill} style={{ width: `${pct}%`, background: pct > 40 ? '#4ADE80' : pct > 15 ? '#FBBF24' : '#F87171' }} />
+          <div className={styles.timerBar} role="progressbar" aria-valuemin={0} aria-valuemax={GRACE_SECONDS} aria-valuenow={secs} aria-label="Seconds left to respond">
+            <div className={styles.timerFill} style={{ width: `${pct}%`, background: barColor }} />
           </div>
-          <span className={styles.timerNum}>{secs}s</span>
+          <span className={styles.timerNum} aria-live="off">{secs}s</span>
         </div>
         <div className={styles.actions}>
-          <button className="btn-primary" onClick={onConfirm}>✓ Still Here!</button>
-          <button className="btn-red" onClick={onAbandon}>Release Desk</button>
+          <button type="button" className="btn-primary" onClick={onConfirm} ref={confirmRef} disabled={busy}>
+            {busy ? 'Confirming…' : '✓ Still here'}
+          </button>
+          <button type="button" className="btn-red" onClick={onAbandon} disabled={busy}>Release desk</button>
         </div>
       </div>
     </div>

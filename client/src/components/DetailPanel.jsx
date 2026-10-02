@@ -1,31 +1,29 @@
+import { useEffect, useRef } from 'react'
 import styles from './DetailPanel.module.css'
+import { statusMeta, timeSince } from '../lib/status.js'
+import { AWAY_MINUTES } from '../config.js'
 
-const STATUS_META = {
-  free:               { label: 'Free',      color: '#4ADE80' },
-  occupied:           { label: 'Occupied',  color: '#F87171' },
-  away:               { label: 'Away',      color: '#FBBF24' },
-  still_here_pending: { label: 'Pending…',  color: '#FBBF24' },
-  abandoned:          { label: 'Abandoned', color: '#6B7280' },
-}
-
-function timeSince(ts) {
+function formatTime(ts) {
   if (!ts) return '—'
-  const s = Math.floor((Date.now() - new Date(ts).getTime()) / 1000)
-  if (s < 60) return `${s}s ago`
-  const m = Math.floor(s / 60)
-  if (m < 60) return `${m}m ago`
-  return `${Math.floor(m/60)}h ${m%60}m ago`
+  try { return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) } catch { return '—' }
 }
 
-export default function DetailPanel({ desk, onClose, onCheckin, onAway, onCheckout }) {
+export default function DetailPanel({ desk, onClose, onCheckin, onAway, onCheckout, onStillHere, busy = false }) {
+  const panelRef = useRef(null)
+  const deskId = desk?.id
+
+  // Move focus into the panel when a (different) desk is opened so keyboard users land on its content
+  useEffect(() => { if (deskId) panelRef.current?.focus() }, [deskId])
+
   if (!desk) return null
-  const meta = STATUS_META[desk.status] || STATUS_META.free
+  const meta = statusMeta(desk.status)
+  const disabled = busy
 
   return (
-    <div className={styles.panel}>
+    <div className={styles.panel} ref={panelRef} tabIndex={-1} aria-labelledby="desk-panel-title">
       <div className={styles.topNav}>
-        <h3>Desk Details</h3>
-        <button className={styles.close} onClick={onClose} aria-label="Close">✕</button>
+        <h2 id="desk-panel-title">Desk details</h2>
+        <button type="button" className={styles.close} onClick={onClose} aria-label="Close desk details">✕</button>
       </div>
 
       <div className={styles.deskIdWrapper}>
@@ -33,27 +31,24 @@ export default function DetailPanel({ desk, onClose, onCheckin, onAway, onChecko
       </div>
 
       <div className={styles.badgeWrapper}>
-        <span className={styles.badge} style={{ background: meta.color }}>
+        <span className={styles.badge} style={{ background: meta.color, color: meta.text }}>
           {meta.label}
         </span>
       </div>
 
-      <div className={styles.meta}>
-        <div className={styles.row}><span>Zone</span><span>{desk.zone}</span></div>
-        {desk.checkin_at && <div className={styles.row}><span>Checked in</span><span>{timeSince(desk.checkin_at)}</span></div>}
-        {desk.status === 'occupied' && <div className={styles.row}><span>Occupied by</span><span>Student</span></div>}
-        {desk.away_at    && <div className={styles.row}><span>Away since</span><span style={{color:'#FBBF24'}}>{timeSince(desk.away_at)}</span></div>}
-      </div>
+      <dl className={styles.meta}>
+        <div className={styles.row}><dt>Zone</dt><dd>{desk.zone}</dd></div>
+        {desk.checkin_at && <div className={styles.row}><dt>Checked in</dt><dd>{timeSince(desk.checkin_at)}</dd></div>}
+        {desk.away_at    && <div className={styles.row}><dt>Away since</dt><dd style={{ color: '#D4AF37' }}>{timeSince(desk.away_at)}</dd></div>}
+      </dl>
 
-      {desk.status === 'occupied' && (
-        <div className={styles.infoText}>This desk is occupied by another student.</div>
-      )}
+      {busy && <p className={styles.busy} role="status">Working…</p>}
 
-      {/* FREE — show QR + check in */}
+      {/* FREE — check in */}
       {desk.status === 'free' && (
-        <div className={styles.qrSection}>
-          <button className="btn-primary" style={{width:'100%'}} onClick={() => onCheckin(desk.id)}>
-            ✓ Check In Now
+        <div className={styles.actions}>
+          <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => onCheckin(desk.id)} disabled={disabled}>
+            ✓ Check in now
           </button>
         </div>
       )}
@@ -61,39 +56,64 @@ export default function DetailPanel({ desk, onClose, onCheckin, onAway, onChecko
       {/* OCCUPIED — away + checkout */}
       {desk.status === 'occupied' && (
         <div className={styles.actions}>
-          <button className="btn-amber" style={{width:'100%'}} onClick={() => onAway(desk.id)}>
-            ⏸ Going Away (20 min)
+          <p className={styles.infoText}>Using this desk? Set it to Away when you step out, or check out when you leave.</p>
+          <button type="button" className="btn-amber" style={{ width: '100%' }} onClick={() => onAway(desk.id)} disabled={disabled}>
+            ⏸ Going away ({AWAY_MINUTES} min hold)
           </button>
-          <button className="btn-red" style={{width:'100%'}} onClick={() => onCheckout(desk.id)}>
-            ✓ Check Out
+          <button type="button" className="btn-red" style={{ width: '100%' }} onClick={() => onCheckout(desk.id)} disabled={disabled}>
+            Check out
           </button>
         </div>
       )}
 
-      {/* AWAY — check back in or release */}
-      {(desk.status === 'away' || desk.status === 'still_here_pending') && (
+      {/* AWAY — come back or release */}
+      {desk.status === 'away' && (
         <div className={styles.actions}>
           <div className={styles.awayHint}>
-            ⏱ Session paused. Return within 20 min or desk is freed.
+            ⏱ Session paused. Return within {AWAY_MINUTES} minutes or the desk is marked abandoned.
           </div>
-          <button className="btn-primary" style={{width:'100%'}} onClick={() => onCheckin(desk.id)}>
-            ✓ I'm Back
+          <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => onCheckin(desk.id)} disabled={disabled}>
+            ✓ I'm back
           </button>
-          <button className="btn-red" style={{width:'100%'}} onClick={() => onCheckout(desk.id)}>
-            Release Desk
+          <button type="button" className="btn-red" style={{ width: '100%' }} onClick={() => onCheckout(desk.id)} disabled={disabled}>
+            Release desk
           </button>
         </div>
       )}
 
-      {/* ABANDONED — librarian link */}
+      {/* PENDING "STILL HERE?" CHECK */}
+      {desk.status === 'still_here_pending' && (
+        <div className={styles.actions}>
+          <div className={styles.awayHint}>
+            ⏱ This desk is waiting for a "Still here?" confirmation. If nobody confirms, it will be marked abandoned.
+          </div>
+          {onStillHere && (
+            <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => onStillHere(desk.id)} disabled={disabled}>
+              ✓ I'm still here
+            </button>
+          )}
+          <button type="button" className="btn-red" style={{ width: '100%' }} onClick={() => onCheckout(desk.id)} disabled={disabled}>
+            Release desk
+          </button>
+        </div>
+      )}
+
+      {/* ABANDONED — claim it */}
       {desk.status === 'abandoned' && (
-        <div className={styles.abandonedNote}>
-          <span>🚨</span>
-          <span>This desk is abandoned. A librarian has been notified.</span>
+        <div className={styles.actions}>
+          <div className={styles.abandonedNote}>
+            <span aria-hidden="true">🚨</span>
+            <span>This desk was left unattended past the hold time. Staff can reset it, or you can claim it now.</span>
+          </div>
+          <button type="button" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => onCheckin(desk.id)} disabled={disabled}>
+            ✓ Claim this desk
+          </button>
         </div>
       )}
 
-      <div className={styles.lastUpdated}>Last updated: Just now</div>
+      <div className={styles.lastUpdated}>
+        Status changed {timeSince(desk.state_at)}{desk.state_at ? ` (${formatTime(desk.state_at)})` : ''}
+      </div>
     </div>
   )
 }

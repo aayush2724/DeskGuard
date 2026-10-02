@@ -2,117 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta name="description" content="DeskGuard's privacy policy: how our sensors detect occupancy without collecting personal data." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy Policy — DeskGuard</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta name="description" content="What DeskGuard stores (desk IDs and timestamps, contact-form messages), what it never collects, and how to reach us about your data." />
+  <link rel="canonical" href="https://deskguard-jade.vercel.app/privacy" />
+  <meta name="theme-color" content="#1A0819" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DeskGuard" />
+  <meta property="og:title" content="Privacy Policy — DeskGuard" />
+  <meta property="og:description" content="What DeskGuard stores (desk IDs and timestamps, contact-form messages), what it never collects, and how to reach us about your data." />
+  <meta property="og:url" content="https://deskguard-jade.vercel.app/privacy" />
+  <meta property="og:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="DeskGuard — a live map of every desk in the library" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Privacy Policy — DeskGuard" />
+  <meta name="twitter:description" content="What DeskGuard stores (desk IDs and timestamps, contact-form messages), what it never collects, and how to reach us about your data." />
+  <meta name="twitter:image" content="https://deskguard-jade.vercel.app/og-image.png" />
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preload" href="/fonts/syne-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script src="/config.js"></script>
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <canvas id="webgl-canvas"></canvas>
-  <nav class="nav" id="nav">
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+  <nav class="nav" id="nav" aria-label="Main">
     <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-            <rect x="1" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9"/>
-            <rect x="13" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/>
-            <rect x="1" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/>
-            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.7"/>
-          </svg>
-        </span>
+      <a href="/" class="logo" aria-label="DeskGuard home">
+        <span class="logo-icon"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg></span>
         DeskGuard
       </a>
-      <div class="nav-links">
-        <a href="index.html#how">How it works</a>
-        <a href="index.html#bookshelf">Features</a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#bookshelf">Features</a>
         <a href="/live">Live Map</a>
         <a href="/scan">Scan QR</a>
         <a href="/librarian">Librarian</a>
-        <a href="contact.html" class="nav-cta">Get early access</a>
+        <a href="/contact" class="nav-cta">Get early access</a>
       </div>
-      <button class="nav-hamburger" aria-label="Menu">
+      <button class="nav-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
+  <main id="main">
   <section class="page-header">
     <span class="eyebrow" data-reveal>Legal</span>
     <h1 data-reveal>Privacy Policy</h1>
-    <p data-reveal>Last updated: June 2026</p>
+    <p data-reveal>Last updated: 2 October 2026</p>
   </section>
 
   <article class="content-narrow" data-reveal>
-    <h2>Our approach</h2>
-    <p>DeskGuard is built around a simple principle: we should be able to tell you whether a desk is free without knowing or caring who is — or was — sitting at it. This policy explains what data our sensors collect, how it's processed, and what reaches our servers.</p>
+    <h2>In short</h2>
+    <p>DeskGuard is built so that it can tell you whether a desk is free without knowing who is sitting at it. The live map and check-in flow work without accounts, cookies, cameras, or sensors. The only personal information DeskGuard stores is what you choose to send through the contact form.</p>
 
-    <h2>What our sensors detect</h2>
-    <p>DeskGuard sensor units passively listen for BLE advertisements and WiFi probe requests emitted by nearby devices, along with ultrasonic distance readings. These are background signals that most devices broadcast automatically, and no pairing, app, or action from occupants is required.</p>
+    <h2>What DeskGuard is</h2>
+    <p>DeskGuard is a web application made up of a public website (this site), a live desk map and QR check-in app, a staff-only librarian dashboard, and an API that stores desk status. This policy covers all of them.</p>
 
-    <h2>What's processed on-device</h2>
-    <p>All raw signal data is processed locally on the sensor unit. Device identifiers (such as MAC addresses) are hashed using a rotating daily salt and used only to distinguish "same device as a moment ago" for short-term continuity. These hashes are never transmitted in a form that allows tracking a device over time or linking it to an individual.</p>
+    <h2>Information we store</h2>
+    <h3>Desk activity</h3>
+    <p>When a desk is checked in, set to <em>Away</em>, released, confirmed with <em>Still here?</em>, or reset by staff, the API records the <strong>desk ID</strong>, its <strong>status</strong>, and <strong>timestamps</strong>, plus a short event message such as "Desk A-01 checked in". Nothing links these events to a person: there are no student accounts, names, device identifiers, or location data. Anyone can view the live map.</p>
+    <h3>Contact-form submissions</h3>
+    <p>If you use the contact form we store the <strong>name, email address, institution, approximate floor count, and message</strong> you enter, together with the time of submission, so that we can reply to you. We use this information only to respond to your enquiry.</p>
+    <h3>Data kept in your own browser</h3>
+    <ul>
+      <li><strong>Librarian access key.</strong> When staff sign in to the librarian dashboard, the access key is kept in that browser's local storage so they don't have to re-enter it, and is sent to the API with each staff request. Signing out removes it.</li>
+      <li><strong>Desks you checked in from this browser.</strong> The live map keeps a list of desk IDs you checked in to, in local storage, so that "Still here?" prompts are only shown for your own desk. This list never leaves your browser.</li>
+    </ul>
+    <p>Clearing your browser's site data removes both.</p>
+    <h3>Technical and server data</h3>
+    <p>Like any web service, our hosting providers process your <strong>IP address</strong> and basic request details (time, path, browser type) in standard server logs when you load the site or call the API. The API also keeps a short-lived, in-memory count of requests per IP address to limit abuse; this count is discarded within a minute and is never written to disk by DeskGuard.</p>
 
-    <h2 id="gdpr">What reaches the dashboard (GDPR)</h2>
-    <p>Only an aggregate, anonymous per-desk status — <code>free</code>, <code>occupied</code>, or <code>ghost</code> — is sent from sensor units to the DeskGuard dashboard. No device identifiers, signal strength values, or individual-level data leave the building. This means DeskGuard does not process personal data as defined under GDPR in its core occupancy feed, as no information relates to an identified or identifiable natural person.</p>
-    <p>Where institutions connect booking integrations (LibCal, Outlook, Google Calendar), reservation data may include names or email addresses depending on how the institution's calendar is configured — this data is governed by a separate data processing agreement available on request.</p>
+    <h2>Your camera</h2>
+    <p>The QR scanner uses your device camera, with your permission, to read desk stickers. Decoding happens entirely in your browser. Camera images are never uploaded or stored, and permission is only requested when you press <em>Start scanner</em>. You can use the manual desk picker instead if you prefer not to grant camera access.</p>
 
-    <h2>Data retention</h2>
-    <p>Aggregate desk-status history is retained according to your plan (30 days for Starter, 1 year for Campus, custom for Enterprise) for analytics purposes. Raw sensor signal data is never retained — it's processed and discarded on-device within seconds.</p>
+    <h2>What we don't do</h2>
+    <ul>
+      <li>No cookies, analytics, advertising, or tracking pixels.</li>
+      <li>No cameras, sensors, Bluetooth or Wi-Fi scanning in the library.</li>
+      <li>No third-party fonts or scripts: everything the site loads is served from this domain.</li>
+      <li>We don't sell or share the information above with anyone except the hosting providers needed to run the service.</li>
+    </ul>
 
-    <h2>Account data</h2>
-    <p>We retain standard account information (names, work emails, billing details) for staff users of the DeskGuard dashboard, handled under our standard data processing terms. This is separate from the occupancy-sensing data described above.</p>
+    <h2>Where data is processed</h2>
+    <p>The website is hosted on <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel</a> and the API on <a href="https://render.com/privacy" rel="noopener">Render</a>. Desk status and contact submissions are stored in a PostgreSQL database and a Redis cache run by managed hosting providers on our behalf.</p>
+    <!-- TODO(owner): name the database/cache providers and their region(s) here once confirmed. -->
+
+    <h2>How long we keep it</h2>
+    <ul>
+      <li><strong>Desk status</strong> is overwritten as desks change state.</li>
+      <li><strong>Activity log entries</strong> (desk ID, status, timestamp, message) are currently kept until they are cleared by the operator. They contain no personal information.</li>
+      <li><strong>Contact-form submissions</strong> are kept until your enquiry has been handled, or until you ask us to delete them.</li>
+    </ul>
+
+    <h2>Your choices and rights</h2>
+    <p>You can ask us to show you, correct, or delete any contact-form submission you've made. Depending on where you live, you may also have statutory rights regarding your personal information. To make a request, use the contact details below and tell us the email address you submitted with.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes we'll update the date at the top of this page. Significant changes will be noted in the <a href="/changelog">changelog</a>.</p>
 
     <h2>Contact</h2>
-    <p>Questions about this policy can be sent to <a href="mailto:privacy@deskguard.io">privacy@deskguard.io</a>.</p>
+    <p>Questions about this policy or your data: <span data-contact-email-or-form>use the <a href="/contact">contact form</a></span>.</p>
   </article>
+  </main>
+
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="logo">
-          <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#E7E0C9" opacity="0.7"/></svg>
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg>
           DeskGuard
         </span>
         <p>A living map of the reading room.</p>
       </div>
-      <div class="footer-links">
+      <nav class="footer-links" aria-label="Footer">
         <div class="footer-col">
           <span class="footer-col-title">Product</span>
-          <a href="index.html#how">How it works</a>
-          <a href="index.html#bookshelf">Features</a>
-          <a href="changelog.html">Changelog</a>
+          <a href="/#how">How it works</a>
+          <a href="/#bookshelf">Features</a>
+          <a href="/live">Live map</a>
+          <a href="/changelog">Changelog</a>
         </div>
         <div class="footer-col">
-          <span class="footer-col-title">Company</span>
-          <a href="blog.html">Blog</a>
-          <a href="careers.html">Careers</a>
-          <a href="contact.html">Contact</a>
+          <span class="footer-col-title">Project</span>
+          <a href="https://github.com/aayush2724/DeskGuard" rel="noopener">Source on GitHub</a>
+          <a href="/contact">Contact</a>
         </div>
         <div class="footer-col">
           <span class="footer-col-title">Legal</span>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-          <a href="privacy.html#gdpr">GDPR</a>
+          <a href="/privacy" aria-current="page">Privacy</a>
+          <a href="/terms">Terms</a>
         </div>
-      </div>
+      </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 DeskGuard Ltd. All rights reserved.</p>
+      <p>© <span data-year>2026</span> DeskGuard. All rights reserved.</p>
     </div>
   </footer>
 
-  <script src="shader.js"></script>
-  <script src="app.js"></script>
+  <script src="/shader.js" defer></script>
+  <script src="/app.js" defer></script>
 </body>
 </html>

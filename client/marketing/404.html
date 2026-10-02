@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found — DeskGuard</title>
+  <meta name="description" content="The page you were looking for could not be found." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#1A0819" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DeskGuard" />
+  <meta property="og:title" content="Page not found — DeskGuard" />
+  <meta property="og:description" content="The page you were looking for could not be found." />
+  <meta property="og:url" content="https://deskguard-jade.vercel.app/404" />
+  <meta property="og:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="DeskGuard — a live map of every desk in the library" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Page not found — DeskGuard" />
+  <meta name="twitter:description" content="The page you were looking for could not be found." />
+  <meta name="twitter:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <link rel="preload" href="/fonts/syne-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script src="/config.js"></script>
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+  <nav class="nav" id="nav" aria-label="Main">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="DeskGuard home">
+        <span class="logo-icon"><svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg></span>
+        DeskGuard
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#bookshelf">Features</a>
+        <a href="/live">Live Map</a>
+        <a href="/scan">Scan QR</a>
+        <a href="/librarian">Librarian</a>
+        <a href="/contact" class="nav-cta">Get early access</a>
+      </div>
+      <button class="nav-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main">
+  <section class="page-header not-found">
+    <span class="eyebrow" data-reveal>Error 404</span>
+    <h1 data-reveal>This desk<br/>doesn't exist</h1>
+    <p data-reveal>The page you're looking for was moved, removed, or never existed. Check the address, or pick up where you left off below.</p>
+    <div class="mini-cta-actions not-found-actions" data-reveal>
+      <a href="/" class="btn-primary"><span>Back to home</span></a>
+      <a href="/live" class="btn-ghost"><span class="pulse-dot small" aria-hidden="true"></span>Open the live map</a>
+      <a href="/contact" class="btn-ghost">Contact us</a>
+    </div>
+  </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo">
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="#F0C987"/><rect x="13" y="1" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="1" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.4"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#F0C987" opacity="0.7"/></svg>
+          DeskGuard
+        </span>
+        <p>A living map of the reading room.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <div class="footer-col">
+          <span class="footer-col-title">Product</span>
+          <a href="/#how">How it works</a>
+          <a href="/#bookshelf">Features</a>
+          <a href="/live">Live map</a>
+          <a href="/changelog">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Project</span>
+          <a href="https://github.com/aayush2724/DeskGuard" rel="noopener">Source on GitHub</a>
+          <a href="/contact">Contact</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Legal</span>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
+        </div>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-year>2026</span> DeskGuard. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/shader.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>

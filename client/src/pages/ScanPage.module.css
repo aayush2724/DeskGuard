@@ -7,7 +7,7 @@
   flex-direction: column;
   min-height: 100vh;
   background: #1A0819;
-  color: #dff0e7;
+  color: var(--text);
   overflow-x: hidden;
 }
 
@@ -63,7 +63,7 @@
 .card {
   background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(240, 201, 135, 0.12);
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -75,7 +75,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(74, 222, 128, 0.1);
+  border-bottom: 1px solid rgba(240, 201, 135, 0.1);
   padding-bottom: 16px;
   margin-bottom: 20px;
   flex-wrap: wrap;
@@ -94,16 +94,17 @@
   justify-content: flex-end;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid rgba(74, 222, 128, 0.1);
+  border-top: 1px solid rgba(240, 201, 135, 0.1);
 }
 
 /* ── Method Tabs ─────────────────────────────────────── */
 .methodTabs {
   display: flex;
-  background: rgba(5, 16, 10, 0.8);
+  background: rgba(26, 8, 25, 0.8);
   padding: 4px;
   border-radius: 8px;
-  border: 1px solid rgba(74, 222, 128, 0.1);
+  border: 1px solid var(--border);
+  flex-wrap: wrap;
 }
 
 .tabBtn {
@@ -142,7 +143,7 @@
   margin: 0 auto;
   background: #020704;
   border-radius: 12px;
-  border: 1px solid rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(240, 201, 135, 0.15);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -252,9 +253,9 @@
 
 .select {
   width: 100%;
-  background: rgba(5, 16, 10, 0.8);
-  border: 1px solid rgba(74, 222, 128, 0.15);
-  color: #dff0e7;
+  background: rgba(26, 8, 25, 0.8);
+  border: 1px solid var(--border-2);
+  color: var(--text);
   padding: 11px 16px;
   font-size: 13px;
   font-weight: 600;
@@ -292,9 +293,9 @@
   width: 100%;
   max-width: 580px;
   aspect-ratio: 16/9;
-  border: 2px dashed rgba(74, 222, 128, 0.25);
+  border: 2px dashed rgba(240, 201, 135, 0.3);
   border-radius: 12px;
-  background: rgba(5, 16, 10, 0.4);
+  background: rgba(26, 8, 25, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -306,8 +307,8 @@
   padding: 20px;
 }
 
-.dropZone:hover {
-  background: rgba(74, 222, 128, 0.05);
+.dropZone:hover, .fileWrapper:focus-within .dropZone {
+  background: rgba(240, 201, 135, 0.06);
   border-color: #F0C987;
 }
 
@@ -351,8 +352,8 @@
 }
 
 .actionCard {
-  border-color: rgba(74, 222, 128, 0.22);
-  box-shadow: 0 10px 40px rgba(74, 222, 128, 0.05);
+  border-color: rgba(240, 201, 135, 0.22);
+  box-shadow: 0 10px 40px rgba(240, 201, 135, 0.05);
 }
 
 .deskBadge {
@@ -360,10 +361,10 @@
   font-weight: 700;
   font-size: 1.3rem;
   color: #F0C987;
-  background: rgba(74, 222, 128, 0.1);
+  background: rgba(240, 201, 135, 0.1);
   padding: 4px 12px;
   border-radius: 6px;
-  border: 1px solid rgba(74, 222, 128, 0.2);
+  border: 1px solid rgba(240, 201, 135, 0.2);
 }
 
 .statusBadge {
@@ -383,11 +384,11 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: rgba(5, 16, 10, 0.5);
+  background: rgba(26, 8, 25, 0.5);
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 24px;
-  border: 1px solid rgba(74, 222, 128, 0.05);
+  border: 1px solid rgba(240, 201, 135, 0.05);
 }
 
 .metaRow {
@@ -461,7 +462,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(74, 222, 128, 0.1);
+  background: rgba(240, 201, 135, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -494,7 +495,7 @@
 
 /* ── Mock QR Panel ───────────────────────────────────── */
 .mockCard {
-  border-color: rgba(74, 222, 128, 0.08);
+  border-color: rgba(240, 201, 135, 0.08);
 }
 
 .mockQrSelectorRow {
@@ -505,8 +506,8 @@
 }
 
 .selectMini {
-  background: rgba(5, 16, 10, 0.8);
-  border: 1px solid rgba(74, 222, 128, 0.15);
+  background: rgba(26, 8, 25, 0.8);
+  border: 1px solid rgba(240, 201, 135, 0.15);
   color: #F0C987;
   padding: 6px 12px;
   font-size: 11px;
@@ -527,9 +528,10 @@
   position: relative;
   cursor: pointer;
   background: #2A0E29;
-  border: 2px solid rgba(74, 222, 128, 0.2);
+  border: 2px solid rgba(240, 201, 135, 0.25);
   border-radius: 12px;
   padding: 12px;
+  font: inherit; color: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -537,10 +539,10 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
-.qrCodeImageContainer:hover {
+.qrCodeImageContainer:hover, .qrCodeImageContainer:focus-visible {
   transform: scale(1.03);
   border-color: #F0C987;
-  box-shadow: 0 4px 24px rgba(74, 222, 128, 0.25);
+  box-shadow: 0 4px 24px rgba(240, 201, 135, 0.25);
 }
 
 .qrCodeImage {
@@ -553,7 +555,7 @@
 .qrOverlayHover {
   position: absolute;
   inset: 0;
-  background: rgba(9, 15, 11, 0.85);
+  background: rgba(26, 8, 25, 0.85);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -562,7 +564,7 @@
   transition: opacity 0.2s;
 }
 
-.qrCodeImageContainer:hover .qrOverlayHover {
+.qrCodeImageContainer:hover .qrOverlayHover, .qrCodeImageContainer:focus-visible .qrOverlayHover {
   opacity: 1;
 }
 
@@ -576,7 +578,7 @@
   border: 1px solid #F0C987;
   padding: 6px 12px;
   border-radius: 6px;
-  background: rgba(74, 222, 128, 0.1);
+  background: rgba(240, 201, 135, 0.1);
 }
 
 .qrPlaceholder {
@@ -617,7 +619,7 @@
   bottom: 28px;
   right: 28px;
   z-index: 500;
-  background: rgba(8, 18, 12, 0.98);
+  background: rgba(26, 8, 25, 0.98);
   border: 1px solid;
   border-radius: 10px;
   padding: 14px 20px;
@@ -626,4 +628,32 @@
   font-weight: 700;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
   animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Production-readiness additions ─────────────────── */
+.statusLine, .errorLine {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-family: 'Space Mono', monospace; font-size: 12px; margin: -16px 0 24px;
+}
+.statusLine { color: var(--text-2); }
+.errorLine { color: #FFB3B3; }
+.dropTitle { font-size: 15px; font-weight: 700; color: #ffffff; }
+.dropHint { font-size: 12px; color: #E7D3B5; }
+.fileInput {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.fileWrapper { position: relative; }
+.fileWrapper:focus-within .dropZone { outline: 2px solid #F0C987; outline-offset: 3px; }
+.placeholderTitle { font-size: 16px; font-weight: 700; color: #ffffff; }
+.deskSummary dd { margin: 0; }
+.deskBadge { margin: 0; }
+@media (max-width: 600px) {
+  .mainLayout { padding: 84px 16px 32px; }
+  .title { font-size: 1.9rem; }
+  .cardHeader { flex-wrap: wrap; gap: 10px; }
+  .controlsRow { flex-wrap: wrap; }
+  .controlsRow > button { width: 100%; justify-content: center; }
+  .actionGrid { grid-template-columns: 1fr !important; }
+  .toast { left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 }

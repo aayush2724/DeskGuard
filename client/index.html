@@ -2,14 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>DeskGuard — Live Library Map</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Live desk map — DeskGuard</title>
+    <meta name="description" content="See which library desks are free right now, and check in by scanning the QR code on your desk." />
+    <meta name="theme-color" content="#1A0819" />
+    <link rel="canonical" href="https://deskguard-jade.vercel.app/live" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DeskGuard" />
+    <meta property="og:title" content="Live desk map — DeskGuard" />
+    <meta property="og:description" content="See which library desks are free right now, and check in by scanning the QR code on your desk." />
+    <meta property="og:url" content="https://deskguard-jade.vercel.app/live" />
+    <meta property="og:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="DeskGuard — a live map of every desk in the library" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Live desk map — DeskGuard" />
+    <meta name="twitter:description" content="See which library desks are free right now, and check in by scanning the QR code on your desk." />
+    <meta name="twitter:image" content="https://deskguard-jade.vercel.app/og-image.png" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts.css" />
   </head>
   <body>
+    <noscript>
+      <div style="padding:24px;font-family:system-ui,sans-serif;color:#FDF5E6;background:#1A0819">
+        The DeskGuard live map needs JavaScript to show desk status in real time.
+        <a href="/" style="color:#F0C987">Return to the DeskGuard home page</a>.
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

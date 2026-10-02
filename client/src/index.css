@@ -1,4 +1,4 @@
-/* DeskGuard React App — Global Styles matching existing dark-green brand */
+/* DeskGuard React App — global styles (plum & gold brand, shared with the marketing site) */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -40,7 +40,7 @@ button { font-family: var(--sans); }
 /* ── Shared Nav ── */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: rgba(5,16,10,.92); backdrop-filter: blur(20px);
+  background: rgba(26,8,25,.92); backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   font-family: var(--display);
 }
@@ -56,7 +56,7 @@ button { font-family: var(--sans); }
 }
 .nav-links { display: flex; align-items: center; gap: 24px; }
 .nav-links a { font-size: 13px; color: var(--text-2); font-weight: 600; transition: color .2s; }
-.nav-links a:hover, .nav-links a.active { color: var(--green); }
+.nav-links a:hover, .nav-links a.active, .nav-links a[aria-current="page"] { color: var(--green); }
 .nav-cta {
   background: rgba(240, 201, 135, 0.15) !important;
   backdrop-filter: blur(10px);
@@ -168,4 +168,85 @@ button { font-family: var(--sans); }
 }
 @keyframes toastIn {
   from { opacity: 0; transform: translateY(20px); }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   Accessibility & state utilities
+   ══════════════════════════════════════════════════════ */
+h1, h2, h3 { font-weight: inherit; font-size: inherit; }
+
+.skip-link {
+  position: absolute; top: -100px; left: 16px; z-index: 1000;
+  background: var(--green); color: var(--bg); font-weight: 700; font-size: 14px;
+  padding: 10px 16px; border-radius: var(--radius-sm); transition: top .15s;
+}
+.skip-link:focus { top: 12px; outline: 3px solid var(--text); outline-offset: 2px; }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.btn-primary:focus-visible, .btn-outline:focus-visible, .btn-ghost:focus-visible,
+.btn-amber:focus-visible, .btn-red:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+
+button:disabled, .btn-primary:disabled, .btn-outline:disabled, .btn-ghost:disabled, .btn-amber:disabled, .btn-red:disabled {
+  opacity: .55; cursor: not-allowed; transform: none !important; box-shadow: none !important;
+}
+
+/* The base .btn-primary rule sets border:none after its border; restore a visible outline */
+.btn-primary { border: 1px solid rgba(240, 201, 135, 0.35); }
+
+.pulse-dot--muted { background: var(--text-3); }
+.pulse-dot--muted::after { border-color: var(--text-3); animation: none; }
+
+.spinner {
+  display: inline-block; width: 16px; height: 16px; flex-shrink: 0;
+  border: 2px solid rgba(240,201,135,.25); border-top-color: var(--green);
+  border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.page-loader {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; gap: 12px;
+  font-family: var(--mono); font-size: 13px; color: var(--text-2);
+}
+
+/* ── Mobile nav ── */
+.nav-hamburger {
+  display: none; flex-direction: column; gap: 5px; background: none; border: none;
+  cursor: pointer; padding: 8px; margin-right: -8px;
+}
+.nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text-2); border-radius: 2px; transition: .3s; }
+@media (max-width: 860px) {
+  .nav-inner { padding: 0 16px; }
+  .nav-hamburger { display: flex; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 26px;
+    position: fixed; inset: 60px 0 0 0; z-index: 199; padding: 24px;
+    background: rgba(26,8,25,.98); overflow-y: auto;
+  }
+  .nav-links.open a { font-size: 18px; padding: 8px 12px; }
+  .nav-mobile-open { overflow: hidden; }
+  .nav-mobile-open .nav-hamburger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-mobile-open .nav-hamburger span:nth-child(2) { opacity: 0; }
+  .nav-mobile-open .nav-hamburger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+}
+
+/* ── 404 (React routes) ── */
+.app-page { min-height: 100vh; display: flex; flex-direction: column; }
+.not-found {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 20px 60px; gap: 16px;
+}
+.not-found h1 { font-family: var(--sans); font-size: clamp(36px, 6vw, 64px); font-weight: 700; letter-spacing: -.04em; line-height: 1.08; }
+.not-found p { max-width: 520px; color: var(--text-2); }
+.not-found-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .spinner { animation: spin 1.6s linear infinite !important; }
 }

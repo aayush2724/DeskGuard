@@ -8,7 +8,16 @@
   'use strict';
 
   const canvas = document.getElementById('webgl-canvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!canvas) return;
+
+  // Respect reduced-motion preferences: skip WebGL entirely (CSS also hides the canvas)
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' })
+          || canvas.getContext('experimental-webgl');
 
   if (!gl) {
     // Fallback: CSS gradient if WebGL unavailable
@@ -201,9 +210,12 @@
   let startTime = performance.now();
 
   /* ── Resize ──────────────────────────────────────────── */
+  // Render at reduced resolution on small screens — the shader is a soft
+  // background, so the saving in GPU work is far larger than the visual cost.
   function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const scale = window.innerWidth < 768 ? 0.5 : 0.75;
+    canvas.width  = Math.max(1, Math.floor(window.innerWidth * scale));
+    canvas.height = Math.max(1, Math.floor(window.innerHeight * scale));
     gl.viewport(0, 0, canvas.width, canvas.height);
   }
   resize();
@@ -217,8 +229,15 @@
   });
   window.addEventListener('mouseleave', () => { targetStrength = 0.0; });
 
-  /* ── Render loop ─────────────────────────────────────── */
-  function render() {
+  /* ── Render loop (paused while the tab is hidden) ────── */
+  let running = false;
+  let lastFrame = 0;
+  const FRAME_MS = 1000 / 30; // a slow ambient background doesn't need 60fps
+  function render(now) {
+    if (!running) return;
+    requestAnimationFrame(render);
+    if (now - lastFrame < FRAME_MS) return;
+    lastFrame = now;
     const t = (performance.now() - startTime) / 1000;
 
     // Smooth mouse strength
@@ -230,9 +249,14 @@
     gl.uniform1f(uMouseStr, mouseStrength);
 
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(render);
   }
 
-  render();
+  function start() { if (!running) { running = true; requestAnimationFrame(render); } }
+  function stop()  { running = false; }
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  // Start after the page has loaded and the main thread is idle, so the shader
+  // never competes with first paint or the hero content.
+  const kickoff = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 2000 }) : setTimeout(start, 300));
+  if (document.readyState === 'complete') kickoff(); else window.addEventListener('load', kickoff, { once: true });
 
 })();

@@ -10,6 +10,7 @@
 import cron from 'node-cron'
 import pool from '../db/postgres.js'
 import redis from '../db/redis.js'
+import { logActivity, DESK_COLUMNS } from '../lib/desks.js'
 
 let broadcastFn = null
 export const setBroadcast = (fn) => { broadcastFn = fn }
@@ -18,29 +19,25 @@ const broadcast = (payload) => {
   if (broadcastFn) broadcastFn(payload)
 }
 
-async function log(deskId, type, msg) {
-  await pool.query(
-    'INSERT INTO activity_log (desk_id, event_type, message) VALUES ($1,$2,$3)',
-    [deskId, type, msg]
-  )
-}
+const log = logActivity
+let sweeping = false
 
 async function sweep() {
-  console.log('[sweep] Running sweep at', new Date().toISOString())
+  if (sweeping) return // never overlap runs if one is slow
+  sweeping = true
   try {
     // ── 1. Check away desks ──────────────────────────────
     const awayRes = await pool.query("SELECT id FROM desks WHERE status='away'")
     for (const { id } of awayRes.rows) {
       const exists = await redis.exists(`away:${id}`)
       if (!exists) {
-        await pool.query(
-          "UPDATE desks SET status='abandoned', state_at=NOW(), away_at=NULL WHERE id=$1",
+        const { rows } = await pool.query(
+          `UPDATE desks SET status='abandoned', state_at=NOW(), away_at=NULL WHERE id=$1 AND status='away' RETURNING ${DESK_COLUMNS}`,
           [id]
         )
-        await log(id, 'abandoned', `Desk ${id} auto-abandoned — 20 min away timer expired`)
-        const desk = (await pool.query('SELECT * FROM desks WHERE id=$1', [id])).rows[0]
-        broadcast({ type: 'desk_update', desk })
-        console.log(`[sweep] ${id} → abandoned (away expired)`)
+        if (!rows[0]) continue
+        await log(id, 'abandoned', `Desk ${id} auto-abandoned — away timer expired`)
+        broadcast({ type: 'desk_update', desk: rows[0] })
       }
     }
 
@@ -49,10 +46,12 @@ async function sweep() {
     for (const { id } of occRes.rows) {
       const exists = await redis.exists(`checkin:${id}`)
       if (!exists) {
-        await pool.query(
-          "UPDATE desks SET status='still_here_pending', state_at=NOW() WHERE id=$1",
+        const { rows } = await pool.query(
+          `UPDATE desks SET status='still_here_pending', state_at=NOW() WHERE id=$1 AND status='occupied' RETURNING ${DESK_COLUMNS}`,
           [id]
         )
+        if (!rows[0]) continue
+        broadcast({ type: 'desk_update', desk: rows[0] })
         // Give 30-second grace period
         await redis.set(`grace:${id}`, '1', 'EX', 30)
         await log(id, 'still_here', `Desk ${id} — "Still here?" prompt sent`)
@@ -66,25 +65,43 @@ async function sweep() {
     for (const { id } of pendingRes.rows) {
       const graceExists = await redis.exists(`grace:${id}`)
       if (!graceExists) {
-        await pool.query(
-          "UPDATE desks SET status='abandoned', state_at=NOW(), checkin_at=NULL WHERE id=$1",
+        const { rows } = await pool.query(
+          `UPDATE desks SET status='abandoned', state_at=NOW(), checkin_at=NULL WHERE id=$1 AND status='still_here_pending' RETURNING ${DESK_COLUMNS}`,
           [id]
         )
+        if (!rows[0]) continue
         await log(id, 'abandoned', `Desk ${id} auto-abandoned — no response to "Still here?"`)
-        const desk = (await pool.query('SELECT * FROM desks WHERE id=$1', [id])).rows[0]
-        broadcast({ type: 'desk_update', desk })
+        broadcast({ type: 'desk_update', desk: rows[0] })
         console.log(`[sweep] ${id} → abandoned (no still-here response)`)
       }
     }
   } catch (err) {
     console.error('[sweep] Error:', err.message)
+  } finally {
+    sweeping = false
+  }
+}
+
+/** Removes activity-log entries older than ACTIVITY_LOG_RETENTION_DAYS (default 90; 0 disables). */
+async function pruneActivityLog() {
+  const days = parseInt(process.env.ACTIVITY_LOG_RETENTION_DAYS ?? '90', 10)
+  if (!Number.isFinite(days) || days <= 0) return
+  try {
+    const { rowCount } = await pool.query(
+      'DELETE FROM activity_log WHERE created_at < NOW() - make_interval(days => $1)', [days]
+    )
+    if (rowCount) console.log(`[sweep] pruned ${rowCount} activity-log entries older than ${days} days`)
+  } catch (err) {
+    console.error('[sweep] prune error:', err.message)
   }
 }
 
 export function startSweepJob() {
   // Run immediately on boot, then every 60 seconds
   sweep()
+  pruneActivityLog()
   cron.schedule('* * * * *', sweep)
+  cron.schedule('17 3 * * *', pruneActivityLog)
   console.log('[sweep] Background sweep started (every 60s)')
 }
 

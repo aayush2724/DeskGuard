@@ -1,0 +1,10 @@
+# DeskGuard — https://deskguard-jade.vercel.app
+User-agent: *
+Allow: /
+
+# Staff-only dashboard and the internal SPA shell are not useful in search results
+Disallow: /librarian
+Disallow: /app
+Disallow: /app.html
+
+Sitemap: https://deskguard-jade.vercel.app/sitemap.xml

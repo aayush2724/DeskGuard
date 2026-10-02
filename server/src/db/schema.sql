@@ -1,6 +1,9 @@
--- DeskGuard PostgreSQL Schema
+-- DeskGuard PostgreSQL Schema (safe to run more than once)
 
-CREATE TYPE desk_status AS ENUM ('free','occupied','away','still_here_pending','abandoned');
+DO $$ BEGIN
+  CREATE TYPE desk_status AS ENUM ('free','occupied','away','still_here_pending','abandoned');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS desks (
   id          TEXT PRIMARY KEY,
@@ -20,8 +23,20 @@ CREATE TABLE IF NOT EXISTS activity_log (
   message     TEXT NOT NULL,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+CREATE INDEX IF NOT EXISTS activity_log_created_at_idx ON activity_log (created_at DESC);
 
--- Seed 30 desks across 3 zones
+-- Enquiries from the website contact form (see the privacy policy for retention)
+CREATE TABLE IF NOT EXISTS contact_requests (
+  id          SERIAL PRIMARY KEY,
+  name        TEXT NOT NULL CHECK (char_length(name) <= 120),
+  email       TEXT NOT NULL CHECK (char_length(email) <= 254),
+  institution TEXT CHECK (char_length(institution) <= 160),
+  floors      TEXT,
+  message     TEXT CHECK (char_length(message) <= 2000),
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Seed desks (the full 90-desk layout is created by seed.js / init_remote.js)
 INSERT INTO desks (id, zone, row_num, col_num) VALUES
   -- Zone A: Quiet Study (3 rows × 4 cols = 12 desks)
   ('A-01','Quiet Study',0,0),('A-02','Quiet Study',0,1),('A-03','Quiet Study',0,2),('A-04','Quiet Study',0,3),
@@ -44,5 +59,6 @@ INSERT INTO desks (id, zone, row_num, col_num) VALUES
   ('E-16','Open Desk',1,5),('E-17','Open Desk',1,6),('E-18','Open Desk',1,7),('E-19','Open Desk',1,8),('E-20','Open Desk',1,9)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO activity_log (desk_id, event_type, message) VALUES
-  (NULL, 'system', 'DeskGuard server started — background sweep active') ON CONFLICT DO NOTHING;
+INSERT INTO activity_log (desk_id, event_type, message)
+  SELECT NULL, 'system', 'DeskGuard database initialised'
+  WHERE NOT EXISTS (SELECT 1 FROM activity_log);
